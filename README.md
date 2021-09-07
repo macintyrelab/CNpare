@@ -65,7 +65,7 @@ Using the function `getDifference()`, the extent of genome differences
 
 First, CNpare extracts the activity levels of the 7 ovarian copy-number
 signatures using the computational approach developed by *Macintyre el
-al. Nature Genetics, 2018*. Functions used for this purpose are:
+al. Nature Genetics, 2018*. Functions used for this purpose are:
 
 -   `extractCopynumberFeatures()`
 -   `generateSampleByComponentMatrix()`
