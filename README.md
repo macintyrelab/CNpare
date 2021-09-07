@@ -37,25 +37,33 @@ This structure must contain the following columns:
 -   copy number – `segVal`
 -   sample identifier – `sample`
 
-The segmented profile used as input needs to be transformed to bin-level
-copy number profiles. This can be done using `getCNbins()`. A
-`QDNAseqCopyNumbers` object can be also used as input.
+Alternatively, a `QDNAseqCopyNumbers` object can be also used as input.
 
-This package includes `CellModels_ASCAT.RData`, a data frame with
+The segmented profile used as input needs to be transformed to bin-level
+copy number profiles. This can be done using `getCNbins()`. Genomic
+positions of bins can be obtained using `getBinsStartsEnds()`.
+
+This package includes `CellModels_ASCAT.RData`, a dataframe with
 copy-number profiles of 1,417 human cancer cell lines from the Cancer
 Cell Line Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in
 cancer (GDSC), which has been generated with ASCAT. This dataset must be
-also be transformed to bin-level copy numbers.
+also be transformed to bin-level copy numbers before to use for
+comparisons.
 
 ### Compare two copy-number profiles
 
 The function `getSimilarities()` can be used to get all similarity
-metrics calculated by CNpare. These metrics are:
+metrics calculated by CNpare. This function needs at least two bin-level
+copy number profiles to compare.
 
--   Pearson correlation
--   Manhattan distance
--   Euclidean distance
--   Cosine similarity
+Four similarity metrics are computed for comparison by default, but the
+user can select to compute only one by modifying the `method` parameter
+as follows:
+
+-   Pearson correlation – `method=pearson`
+-   Manhattan distance – `method=manhattan`
+-   Euclidean distance – `method=euclidean`
+-   Cosine similarity – `method=cosine`
 
 ### Compute the % genome differences
 
