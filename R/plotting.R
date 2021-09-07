@@ -21,7 +21,7 @@ plot_diffdensity<-function(diff){
         labs(title= "Distribution of the genomic differences",
              subtitle = (paste0("% from ",round(min(as.numeric(diff$percDiff)),2),
                                 " to ",round(max(as.numeric(diff$percDiff)),2))),
-             x="% of difference",
+             x="Extent of genome difference (%)",
              y="Frequency")+
         theme_minimal()
 }
@@ -47,7 +47,7 @@ CNPlot_events <- function(events,events_2,plot_diff=FALSE){
     percentage_diff<-getDifference(unify)
 
     #data for plotting
-    chr_sizes <- chr_sizes
+    chr_sizes <- CNpare:::chr_sizes
     chr_sizes$length <- 1e-6 * chr_sizes$length #Convert sizes to Mb
     chr_sizes$offset <- cumsum(chr_sizes$length) - chr_sizes$length #Calculate the interval range of each chr
 

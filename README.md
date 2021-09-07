@@ -27,7 +27,7 @@ library(CNpare)
 ### Input data
 
 The most basic initial input to the CNpare package consists of a data
-frame containing the copy number profile segmented from a sample.
+frame containing the copy number profile segmented from a tumour sample.
 
 This structure must contain the following columns:
 
@@ -43,12 +43,11 @@ The segmented profile used as input needs to be transformed to bin-level
 copy number profiles. This can be done using `getCNbins()`. Genomic
 positions of bins can be obtained using `getBinsStartsEnds()`.
 
-This package includes `CellModels_ASCAT.RData`, a dataframe with
-copy-number profiles of 1,417 human cancer cell lines from the Cancer
-Cell Line Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in
-cancer (GDSC), which has been generated with ASCAT. This dataset must
-also be transformed to bin-level copy numbers before to use for
-comparisons.
+This package includes `cells_segcn.RData`, a dataframe with copy-number
+profiles of 1,417 human cancer cell lines from the Cancer Cell Line
+Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in cancer (GDSC),
+which has been generated with ASCAT. This dataset must also be
+transformed to bin-level copy numbers before to be used for comparisons.
 
 ### Compare two copy-number profiles
 
@@ -57,8 +56,8 @@ metrics calculated by CNpare. This function needs at least two bin-level
 copy number profiles to compare.
 
 Four similarity metrics are computed for comparison by default, but the
-user can select to compute only one by modifying the `method` parameter
-as follows:
+user can be interested in only computing one of them. It can be done by
+modifying the `method` parameter as follows:
 
 -   Pearson correlation – `method=pearson`
 -   Manhattan distance – `method=manhattan`
@@ -80,7 +79,13 @@ al. Nature Genetics, 2018*. Functions used for this purpose are:
 -   `generateSampleByComponentMatrix()`
 -   `quantifySignatures()`
 
-The, using the function `plotClusters()`, profiles are clustered
+Data needed for quantifying these signatures is included in CNpare,
+except for `component_parameters.rds` which may be downloaded from here:
+<https://bitbucket.org/britroc/cnsignatures/src/master/data/>. We are
+preparing an experiment data package for including all data needed for
+identifying copy-number signatures
+
+Finally, using the function `plotClusters()`, profiles are clustered
 according to their exposure to each copy number signature.
 
 ## Manuscript analysis Rmarkdown

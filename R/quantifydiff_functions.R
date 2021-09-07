@@ -64,8 +64,7 @@ unifySegments<-function(posSeg,data){
 
 getDifference<- function(unify){
     #get genome size
-    genome_size<-read.csv(file="data/hg19.chrom.sizes.txt",sep="\t",stringsAsFactors = F,
-                          header=FALSE,col.names = c("chr","length"))
+    genome_size<-CNpare:::chr_sizes
     genome_size<-sum(genome_size$length)
 
     diff<-c()

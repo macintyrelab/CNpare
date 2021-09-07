@@ -1,0 +1,177 @@
+---
+title: "CNpare Tool: Comparison of copy-number profiles"
+subtitle: Testing its ability to find the closest copy-number profile
+author:
+  - Barbara Hernando, bhernando@cnio.es
+  - Blas Chaves, bchavesu@ext.cnio.es
+  - Geoff Macintyre, gmacintyre@cnio.es
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_document:
+    number_sections: no
+    theme: simplex
+    toc: yes
+    toc_float: yes
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+## PACKAGES NEEDED
+library(dplyr)
+library(CNpare)
+```
+
+### Assessing performance of CNparison
+
+This Rmarkdown is used to check the ability of **CNpare Tool** to identify the copy-number profile with the highest similarity to a sample of interest. For this purpose, we used separate cultures of the same cell lines profiled as part of the CCLE and GDSC projects (304 pairs) and observed the capacity of CNparison to identify the correct cell line.
+
+#### Step 1: set up to run the quality tool
+
+##### [Input data]{.ul}
+
+We first get the **RData** files in the `data/` folder:
+
+-   `cells_segcn.RData` -- Absolute copy-number profiles of cancer cell lines generated with *ASCAT*. The segment tables should have the following column headers: "chromosome", "start", "end", "segVal", "sample".
+-   `cells_mapping.RData` Mapping information of cancer cell lines
+
+```{r input, include=FALSE}
+cells_segcn<-cells_segcn
+cells_mapping<-cells_mapping
+```
+
+##### [Get the genomic positions of bins]{.ul}
+
+Segmented copy-number profiles of cell lines may be fitted to the genomic positions of bins. Therefore, we split genome in evenly sized bins (default 500 kb) and get their positions.
+
+```{r pos_bins}
+allchr=c(1:22) #Add 23 if you want to include chrX
+lengthChr=lengthChr
+posBins <- lapply(allchr,function(chr) 
+    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+```
+
+##### [Selection of cell lines with CIN]{.ul}
+
+We selected cell lines that have at least 20 copy number aberrations since this tool has been developed to work with samples with a minimal level of chromosomal instability.
+
+```{r select_samples, echo=FALSE}
+cells_segcn<-getCINProfiles(segcn=cells_segcn, samples=unique(cells_segcn$sample))
+print(paste0("Number of cell lines with detectable CIN: ",length(unique(cells_segcn$sample))))
+```
+
+##### [Cell lines data preprocessing]{.ul}
+
+We selected cell lines included in both databases (CCLE and GDSC), and whose copy-number profile has been generated using data from both CCLE and GDSC. Then, *segment tables* are converted to *bin tables*. A matrix with bin-level copy numbers is generated for both CCLE and GDSC.
+
+```{r cnbins}
+#cell lines with CN profile generated with CCLE and GDSC data
+ccle <- cells_mapping[cells_mapping$study=="CCLE",c(1,4)]
+ccle <- ccle[ccle$fileid %in% cells_segcn$sample,] #with ASCAT CN profile
+gdsc <- cells_mapping[cells_mapping$study=="GDSC",c(1,4)] #in GDSC cellid and fileid is the same
+gdsc <- gdsc[gdsc$fileid %in% cells_segcn$sample,] #with ASCAT CN profile
+both <- ccle[ccle$cellid %in% gdsc$fileid,] 
+
+# Get copy-number data per bin
+ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=both$fileid)
+gdsc_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=both$cellid)
+```
+
+#### Step 2: Running the tool
+
+##### 2.1) [Check for similarity between copy-number profiles]{.ul}
+
+We compare bin-level copy-number profiles of cell pairs. We use [*four similarity metrics*]{.ul}:
+
+-   *Pearson correlation*: An pearson's r value of exactly 1 indicates that the CN profiles of two samples are equal, although it's a measure that tolerates whole ploidy shifts. Rank-base comparisons (kendall or spearman correlation tests) are not recommended to be used for comparing CN profiles because they are sensitive to small variations in the segVal or raw copy-number values of segments (noisy profiles).
+
+-   *Manhattan distance*: A manhattan distance of exactly 0 indicates that the CN profiles of two samples are equal. Contrary to pearson correlation, this measure does not tolerate whole ploidy shifts.
+
+-   *Euclidean distance*: An euclidean distance of exactly 0 indicates that the CN profiles of two samples are equal. As manhattan distance, this distance measure does not tolerate whole ploidy shifts.
+
+-   *Cosine similarity*: A cosine similarity of exactly 1 indicates that the CN profiles of two samples are equal. As Pearson correlation, this measure tolerates whole ploidy shifts.
+
+```{r similarities}
+measures<-getSimilarities(dat1=ccle_cn, dat2=gdsc_cn, method="all")
+measures<-left_join(measures,both,by="fileid")
+```
+
+Then, we evaluated the ability of our tool to match CCLE- and GDSC-derived profiles of the same cell line.
+
+```{r top_lists}
+list.tophits<-getTopHit(samples=both$cellid, measure=measures[,c(7,2:6)], method="all")
+```
+
+We observed [two main groups]{.ul} regarding similarity results.
+
+The **first group** is composed by cell lines that perfectly matched according to all measures. In all cases, the ploidy estimated by ASCAT using data from both datasets is exactly the same, and for that reason manhattan and euclidean distances are almost equal to zero.
+
+```{r allmatch, echo=FALSE}
+#Top-1 in all measures --> equal profile with equal ploidy
+list.tophits$equal<-list.tophits[,1]==list.tophits[,2] & list.tophits[,1]==list.tophits[,3] & list.tophits[,1]==list.tophits[,4] & list.tophits[,1]==list.tophits[,5]
+top1<-list.tophits[list.tophits$equal,] 
+print("Number of samples in the Top-1 for all comparison measures") 
+print(paste0(nrow(top1),"/304 samples"))
+```
+
+Plot the copy-number profiles of **A172** cell line as an example of perfect match
+
+```{r plot_allmatch, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
+b<-both[both$cellid=="A172",]
+exp_cell=cells_segcn[cells_segcn$sample==b$cellid,]
+mod_cell=cells_segcn[cells_segcn$sample==b$fileid,]
+exp_cell$sample<-paste0(b$cellid, "-GDSC")
+mod_cell$sample<-paste0(b$cellid, "-CCLE")
+CNPlot_events(exp_cell, mod_cell, plot_diff = FALSE)
+```
+
+The **second group** corresponds to cell lines that have only match by pearson's r and cosine similarity, but not for manhattan and euclidean distances. These samples present a similar copy-number profiles in terms of focal CNAs, but there are inconcluences in the ploidy estimated by ASCAT using genomic data from CCLE and GDSC. Manhanttan and Euclidean distances do not tolerate whole ploidy shifts. Since pearson correlation test and cosine similarity are normalized measures, they can be used to identify similar profiles regardless of their ploidy magnitude.
+
+```{r non-allmatch, echo=FALSE}
+nontop<-list.tophits[!list.tophits$equal,]
+nontop$equal<-nontop[,1]==nontop[,2] & nontop[,1]==nontop[,3]
+diffploidy.top1<-nontop[nontop$equal,]
+print("Number of samples in the Top-1 for only pearson's r and cosine similarity") 
+print(paste0(nrow(diffploidy.top1),"/304 samples"))
+```
+
+Plot the copy-number profiles of *22RV1* cell line as an example of perfect match regardless ploidy estimated (top1 for pearson's r and cosine similarity)
+
+```{r plot_non-allmatch, fig2, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
+b<-both[both$cellid=="22RV1",]
+exp_cell=cells_segcn[cells_segcn$sample==b$cellid,]
+mod_cell=cells_segcn[cells_segcn$sample==b$fileid,]
+exp_cell$sample<-paste0(b$cellid, "-GDSC")
+mod_cell$sample<-paste0(b$cellid, "-CCLE")
+CNPlot_events(exp_cell, mod_cell, plot_diff = FALSE)
+```
+
+##### 2.2) [What is the extent of differences between CCLE- and GDSC-derive profiles?]{.ul}
+
+CNpare allows to calculate the extent of genome differences between two profiles. We calculated the percentage of genome different for all cell culture pairs
+
+```{r calculate_allpercentages}
+differences<-c()
+for (i in 1:nrow(both)){
+  # Get profile pairs
+  gdsc<-both[i,1]
+  ccle<-both[i,2]
+  
+  #Calculate the % of difference
+  unify<-unifySegments(cells_segcn[cells_segcn$sample==gdsc,],cells_segcn[cells_segcn$sample==ccle,])
+  diff<-getDifference(unify)
+  differences<-rbind(differences,c(gdsc,round(diff,2)))
+}
+colnames(differences)<-c("cellid","percDiff")
+differences<-data.frame(differences,stringsAsFactors = F)
+differences$percDiff<-as.numeric(differences$percDiff)
+```
+
+Then, we plotted the distribution of the genomic differences
+
+```{r plot_percentage_distribution, fig2, fig.height = 4, fig.width = 4, fig.align = "center", eval=TRUE, echo=FALSE}
+plot_diffdensity(differences)
+```
