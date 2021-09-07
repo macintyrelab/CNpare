@@ -18,10 +18,10 @@
 
 extractCopynumberFeatures<-function(CN_data, cores = 1){
     #get chromosome lengths
-    chrlen<-read.table("data/grch37.chrom.sizes.txt",sep="\t",stringsAsFactors = F)[1:24,]
+    chrlen<-chrlen
 
     #get centromere locations
-    gaps<-read.table("data/gap_hg19.txt",sep="\t",header=F,stringsAsFactors = F)
+    gaps<-gaps
     centromeres<-gaps[gaps[,8]=="centromere",]
 
     if(cores > 1) {
@@ -73,7 +73,7 @@ extractCopynumberFeatures<-function(CN_data, cores = 1){
 quantifySignatures<-function(sample_by_component,component_by_signature=NULL){
     if(is.null(component_by_signature))
     {
-        component_by_signature<-readRDS("data/feat_sig_mat.rds")
+        component_by_signature <- feat_sig_mat
     }
     signature_by_sample<-YAPSA::LCD(t(sample_by_component),
                                     YAPSA:::normalize_df_per_dim(component_by_signature,2))

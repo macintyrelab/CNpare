@@ -46,8 +46,7 @@ CNPlot_events <- function(events,events_2,plot_diff=FALSE){
     percentage_diff<-getDifference(unify)
 
     #data for plotting
-    chr_sizes <- read.csv(file="data/hg19.chrom.sizes.txt",sep="\t",stringsAsFactors = F,
-                          header=FALSE,col.names = c("chr","length"))[1:23,]
+    chr_sizes <- chr_sizes
     chr_sizes$length <- 1e-6 * chr_sizes$length #Convert sizes to Mb
     chr_sizes$offset <- cumsum(chr_sizes$length) - chr_sizes$length #Calculate the interval range of each chr
 
