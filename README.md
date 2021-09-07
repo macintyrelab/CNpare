@@ -46,7 +46,7 @@ positions of bins can be obtained using `getBinsStartsEnds()`.
 This package includes `CellModels_ASCAT.RData`, a dataframe with
 copy-number profiles of 1,417 human cancer cell lines from the Cancer
 Cell Line Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in
-cancer (GDSC), which has been generated with ASCAT. This dataset must be
+cancer (GDSC), which has been generated with ASCAT. This dataset must
 also be transformed to bin-level copy numbers before to use for
 comparisons.
 
