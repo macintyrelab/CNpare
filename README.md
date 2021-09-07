@@ -37,14 +37,15 @@ This structure must contain the following columns:
 -   copy number – `segVal`
 -   sample identifier – `sample`
 
-This package includes a data frame with copy-number profiles of 1,417
-human cancer cell lines from the Cancer Cell Line Encyclopaedia (CCLE)
-and Genomics of Drug Sensitivity in cancer (GDSC), which has been
-generated with ASCAT.
-
 The segmented profile used as input needs to be transformed to bin-level
 copy number profiles. This can be done using `getCNbins()`. A
 `QDNAseqCopyNumbers` object can be also used as input.
+
+This package includes `CellModels_ASCAT.RData`, a data frame with
+copy-number profiles of 1,417 human cancer cell lines from the Cancer
+Cell Line Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in
+cancer (GDSC), which has been generated with ASCAT. This dataset must be
+also be transformed to bin-level copy numbers.
 
 ### Compare two copy-number profiles
 
@@ -65,7 +66,7 @@ Using the function `getDifference()`, the extent of genome differences
 
 First, CNpare extracts the activity levels of the 7 ovarian copy-number
 signatures using the computational approach developed by *Macintyre el
-al. Nature Genetics, 2018*. Functions used for this purpose are:
+al. Nature Genetics, 2018*. Functions used for this purpose are:
 
 -   `extractCopynumberFeatures()`
 -   `generateSampleByComponentMatrix()`
