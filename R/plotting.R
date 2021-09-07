@@ -30,6 +30,7 @@ plot_diffdensity<-function(diff){
 #' @title Visualization of two copy-number profiles
 #' @description This function draws two copy-number profiles for visual comparison
 #' @name CNPlot_events
+#' @importFrom graphics abline axis hist legend par plot.new plot.window segments text title
 #'
 #' @param events segment table with absolute copy numbers of one sample
 #' @param events_2 segment table with absolute copy numbers of the other sample

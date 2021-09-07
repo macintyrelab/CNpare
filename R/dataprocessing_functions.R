@@ -67,9 +67,9 @@ getCNbins <- function(posBins,data,samples){
 
     for (b in 1:nrow(pb)){
         #print(paste0("Starting bin #", b))
-        chrom <- pb[b,chromosome]
-        start <- pb[b,starts]
-        end   <- pb[b,ends]
+        chrom <- pb[b,1]
+        start <- pb[b,2]
+        end   <- pb[b,3]
         cn <- data[(data$chromosome %in% chrom & data$start<=start & data$end>=end), ]
 
         for (s in 1:length(samples)){
