@@ -8,8 +8,6 @@
 #' @description This function extract feactures of CNAs.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name extractCopynumberFeatures
-#' @import foreach
-#' @import doMC
 #'
 #' @param CN_data segment table with copy numbers
 #' @param cores cores to use. Default is 1
@@ -64,7 +62,6 @@ extractCopynumberFeatures<-function(CN_data, cores = 1){
 #' @description This function quantify copy-number signatures.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name quantifySignatures
-#' @import YAPSA
 #'
 #' @param sample_by_component matrix with components per sample
 #' @param component_by_signature matrix with components per signature
@@ -88,8 +85,6 @@ quantifySignatures<-function(sample_by_component,component_by_signature=NULL){
 #' @description This function get components per sample.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name generateSampleByComponentMatrix
-#' @import foreach
-#' @import doMC
 #'
 #' @param CN_features list with features per sample
 #' @param all_components components of copy-number signatures to obtain
@@ -138,9 +133,6 @@ generateSampleByComponentMatrix<-function(CN_features, all_components=NULL, core
 #' @description Helper function for generateSampleByComponentMatrix.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name calculateSumOfPosteriors
-#' @import foreach
-#' @import doMC
-#' @import flexmix
 #'
 #' @param CN_feature feature of the copy-number profiles
 #' @param components components of copy-number signatures
@@ -493,7 +485,6 @@ getSampNames<-function(abs_profiles){
 #' @description Helper function for getting segment table with copy numbers.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name getSegTable
-#' @import Biobase
 #'
 #' @param x each object included
 #'

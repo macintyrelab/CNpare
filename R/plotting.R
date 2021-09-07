@@ -6,7 +6,6 @@
 #' @title Density plot showing the distribution of genome differences
 #' @description This function draws the extent of genome differences across all comparisons
 #' @name plot_diffdensity
-#' @import ggplot2
 #'
 #' @param diff dataframe with cell names 'cellid' and genome differences 'percDiff'
 #'
@@ -31,7 +30,6 @@ plot_diffdensity<-function(diff){
 #' @title Visualization of two copy-number profiles
 #' @description This function draws two copy-number profiles for visual comparison
 #' @name CNPlot_events
-#' @import graphics
 #'
 #' @param events segment table with absolute copy numbers of one sample
 #' @param events_2 segment table with absolute copy numbers of the other sample
@@ -115,7 +113,6 @@ CNPlot_events <- function(events,events_2,plot_diff=FALSE){
 
 #' @title A helper function for CNPlot_events
 #' @description This function prepare profiles for plotting
-#' @name CNconvert
 #'
 #' @param e segment table with absolute copy numbers
 #' @param base sizes of chromosomes
@@ -145,7 +142,6 @@ CNconvert <- function(e,base){
 #' @description This function draws a cluster plot with samples grouped by
 #' exposure levels to ovarian copy-number signatures
 #' @name plotClusters
-#' @import factoextra
 #'
 #' @param signs matrix with levels of exposure to each signature
 #' @param palette vector with colors to use for each group. The length of this

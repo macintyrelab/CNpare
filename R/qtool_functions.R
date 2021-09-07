@@ -6,7 +6,6 @@
 #' @title Perform a pearson correlation test
 #' @description This function calculates the Pearson's r
 #' @name pair_pearson
-#' @import stats
 #'
 #' @param cell vector with bin-level copy number values of one sample
 #' @param ccle vector with bin-level copy number values of model
@@ -93,7 +92,6 @@ pair_cosine<-function(cell, ccle, ccle.name){
 #' @title Get similarity metrics
 #' @description This function get similarity metrics for comparisons
 #' @name getSimilarities
-#' @import data.table
 #'
 #' @param dat1 matrix with bin-level copy numbers per sample to test
 #' @param dat2 matrix with bin-level copy numbers per model to compare
@@ -184,7 +182,6 @@ getSimilarities<-function(dat1, dat2, method="all"){
 #' @title Get top hits
 #' @description This function get the top hit for each comparison per sample
 #' @name getTopHit
-#' @import data.table
 #'
 #' @param samples vector with name of samples
 #' @param measure dataframe with similarity metrics
