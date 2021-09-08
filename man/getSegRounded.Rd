@@ -15,3 +15,8 @@ list of profiles with copy numbers rounded
 \description{
 This function rounds copy numbers to the closest integer
 }
+\examples{
+profiles <- getProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample))
+rounded.profiles<-getSegRounded(profiles)
+}

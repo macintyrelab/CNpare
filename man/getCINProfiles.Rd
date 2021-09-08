@@ -17,3 +17,7 @@ segment table of copy numbers of samples with detectable CIN
 \description{
 This function select samples with detectable CIN
 }
+\examples{
+cin.profiles <- getCINProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample))
+}

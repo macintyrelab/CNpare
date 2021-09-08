@@ -20,3 +20,10 @@ bin table of copy numbers of all samples
 \description{
 This function transform segment tables to bin tables
 }
+\examples{
+posBins <- lapply(seq_len(22),function(chr)
+    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+cell_bin <- getCNbins(posBins=posBins,
+    data=cells_segcn[cells_segcn$sample=="22RV1",],
+    samples="22RV1")
+}

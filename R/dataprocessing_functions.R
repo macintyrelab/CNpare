@@ -15,6 +15,8 @@
 #' @return list with genomic positions of each bin
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 
 getBinsStartsEnds <- function(window=500000,chr,lengthChr){
     divideChr <- seq(0, lengthChr, window)
@@ -36,6 +38,8 @@ getBinsStartsEnds <- function(window=500000,chr,lengthChr){
 #' @return segment table of copy numbers of samples with detectable CIN
 #' @export
 #' @examples
+#' cin.profiles <- getCINProfiles(segcn=cells_segcn,
+#'     samples=unique(cells_segcn$sample))
 
 getCINProfiles <- function(segcn,samples){
     profiles <- getProfiles(segcn, samples)
@@ -58,17 +62,21 @@ getCINProfiles <- function(segcn,samples){
 #' @return bin table of copy numbers of all samples
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' cell_bin <- getCNbins(posBins=posBins,
+#'     data=cells_segcn[cells_segcn$sample=="22RV1",],
+#'     samples="22RV1")
 
 getCNbins <- function(posBins,data,samples){
     pb=data.table::rbindlist(posBins)
     CNmatrix <- matrix(nrow = nrow(pb), ncol = length(samples)) #Create the matrix
     colnames(CNmatrix) <- samples
 
-    for (b in nrow(pb)){
-        #print(paste0("Starting bin #", b))
-        chrom <- pb[b,1]
-        start <- pb[b,2]
-        end   <- pb[b,3]
+    for (b in seq_len(nrow(pb))){
+        chrom <- as.character(pb[b,1])
+        start <- as.numeric(pb[b,2])
+        end   <- as.numeric(pb[b,3])
         cn <- data[(data$chromosome %in% chrom & data$start<=start & data$end>=end), ]
 
         for (s in length(samples)){
@@ -95,6 +103,8 @@ getCNbins <- function(posBins,data,samples){
 #' @return list of profiles
 #' @export
 #' @examples
+#' profiles <- getProfiles(segcn=cells_segcn,
+#'     samples=unique(cells_segcn$sample))
 
 getProfiles<-function(segcn,samples){
     profiles <- list()
@@ -118,6 +128,9 @@ getProfiles<-function(segcn,samples){
 #' @return list of profiles with copy numbers rounded
 #' @export
 #' @examples
+#' profiles <- getProfiles(segcn=cells_segcn,
+#'     samples=unique(cells_segcn$sample))
+#' rounded.profiles<-getSegRounded(profiles)
 
 getSegRounded <- function(profiles){
     rounded_profiles<-list()
@@ -157,6 +170,9 @@ getSegRounded <- function(profiles){
 #' @return vector with sample names
 #' @export
 #' @examples
+#' profiles <- getProfiles(segcn=cells_segcn,
+#'     samples=unique(cells_segcn$sample))
+#' cin.samples<-getCINSamp(profiles)
 
 getCINSamp<-function(profiles){
     samples<-c()

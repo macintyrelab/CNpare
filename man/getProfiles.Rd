@@ -17,3 +17,7 @@ list of profiles
 \description{
 This function includes all profiles in a list
 }
+\examples{
+profiles <- getProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample))
+}

@@ -15,3 +15,8 @@ vector with sample names
 \description{
 This function filters out samples with <20 CNAs
 }
+\examples{
+profiles <- getProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample))
+cin.samples<-getCINSamp(profiles)
+}

@@ -19,3 +19,7 @@ list with genomic positions of each bin
 \description{
 This function split genome into evenly sized bins
 }
+\examples{
+posBins <- lapply(seq_len(22),function(chr)
+    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+}
