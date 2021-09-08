@@ -6,6 +6,7 @@
 #' @title Alignment of genomic positions of segments
 #' @description This function unifies boundaries of copy-number segments
 #' @name unifySegments
+#' @importFrom stats median
 #'
 #' @param posSeg dataframe with segments of the reference sample
 #' @param data dataframe with segments of the experimental model

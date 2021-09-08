@@ -8,6 +8,7 @@
 #' @description This function extract feactures of CNAs.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name extractCopynumberFeatures
+#' @import foreach
 #'
 #' @param CN_data segment table with copy numbers
 #' @param cores cores to use. Default is 1
@@ -133,6 +134,7 @@ generateSampleByComponentMatrix<-function(CN_features, all_components=NULL, core
 #' @description Helper function for generateSampleByComponentMatrix.
 #' Approach developed by Geoff Macintyre et al. 2018
 #' @name calculateSumOfPosteriors
+#' @import foreach
 #'
 #' @param CN_feature feature of the copy-number profiles
 #' @param components components of copy-number signatures
@@ -150,8 +152,8 @@ calculateSumOfPosteriors<-function(CN_feature,components,name, rowIter = 1000, c
         iters = floor( len / rowIter )
         lastiter = iters[length(iters)]
 
-        registerDoMC(cores)
-        curr_posterior = foreach( i=0:iters, .combine=rbind) %dopar% {
+        doMC::registerDoMC(cores)
+        curr_posterior = foreach::foreach(i=0:iters, .combine=rbind) %dopar% {
             start = i*rowIter+1
             if(i != lastiter) { end = (i+1)*rowIter } else { end = len }
             flexmix::posterior(components,data.frame(dat=as.numeric(CN_feature[start:end,2])))

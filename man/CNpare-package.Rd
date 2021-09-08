@@ -6,10 +6,11 @@
 \alias{CNpare-package}
 \title{CNpare: Comparing tumour copy number profiles}
 \description{
-CNpare can be used to: 
-    1) calculate similarities between copy-number profiles
-    2) quantify the extent of genome differences between copy-number profiles
-    3) compare profiles based on copy-number signatures
+CNpare is designed to compare and contrast genome-wide tumour copy 
+    number profiles. This package can be used to: 
+    1) Calculate similarities between copy-number profiles
+    2) Quantify the extent of genome differences between copy-number profiles
+    3) Compare profiles based on copy-number signatures
 }
 \author{
 \strong{Maintainer}: Barbara Hernando \email{bhernando@cnio.es}
