@@ -26,7 +26,8 @@ Imports:
     flexmix,
     foreach,
     ggplot2,
-    YAPSA
+    YAPSA,
+    dplyr
 Suggests: 
     knitr, 
     rmarkdown
