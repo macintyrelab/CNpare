@@ -21,8 +21,7 @@ getBinsStartsEnds <- function(window=500000,chr,lengthChr){
     starts <- divideChr[-c(length(divideChr))] + 1
     ends <- divideChr[-c(1)]
 
-    binsSe <- list(chromosome=chr,starts=starts,
-                   ends=ends)
+    binsSe <- list(chromosome=chr,starts=starts,ends=ends)
     binsSe
 }
 
@@ -65,14 +64,14 @@ getCNbins <- function(posBins,data,samples){
     CNmatrix <- matrix(nrow = nrow(pb), ncol = length(samples)) #Create the matrix
     colnames(CNmatrix) <- samples
 
-    for (b in 1:nrow(pb)){
+    for (b in nrow(pb)){
         #print(paste0("Starting bin #", b))
         chrom <- pb[b,1]
         start <- pb[b,2]
         end   <- pb[b,3]
         cn <- data[(data$chromosome %in% chrom & data$start<=start & data$end>=end), ]
 
-        for (s in 1:length(samples)){
+        for (s in length(samples)){
             if (nrow(cn)!=0){
                 segVal <- cn[cn$sample==samples[s], "segVal"]
                 CNmatrix[b,s] <- ifelse(length(segVal)!=0, segVal, NA)
@@ -102,7 +101,7 @@ getProfiles<-function(segcn,samples){
     for (i in samples){
         profile <- segcn[segcn$sample==i,]
 
-        profile  <- profile[,c(1:4)]
+        profile  <- profile[,c(seq_len(4))]
         profiles[[i]] <- profile
     }
     names(profiles) <- samples
@@ -133,13 +132,13 @@ getSegRounded <- function(profiles){
             rle<-rle(t$segVal)
             starts <- cumsum(c(1,rle$lengths[-length(rle$lengths)]))
             ends <- cumsum(rle$lengths)
-            lapply(1:length(rle$lengths), function(s) {
+            lapply(seq_len(length(rle$lengths)), function(s) {
                 from <- t$start[starts[s]]
                 to <- t$end[ends[s]]
                 segValue <- rle$value[s]
                 c(t$chromosome[starts[s]], from, to, segValue)
             }) -> segtmp
-            segTableRaw <- data.frame(matrix(unlist(segtmp), ncol=4, byrow=T),stringsAsFactors=F)
+            segTableRaw <- data.frame(matrix(unlist(segtmp), ncol=4, byrow=TRUE),stringsAsFactors=FALSE)
             segTable<-rbind(segTable,segTableRaw)
         }
         colnames(segTable) <- c("chromosome", "start", "end", "segVal")
@@ -161,7 +160,7 @@ getSegRounded <- function(profiles){
 
 getCINSamp<-function(profiles){
     samples<-c()
-    for (i in 1:length(profiles)){
+    for (i in seq_len(length(profiles))){
         profile <- profiles[[i]]
         profile <- profile[profile$chromosome != "X",]
         s<-names(profiles)[i]

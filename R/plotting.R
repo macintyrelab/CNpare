@@ -16,14 +16,14 @@
 
 plot_diffdensity<-function(diff){
     colnames(diff)[2]<-"percDiff"
-    ggplot(data = diff, aes(x=as.numeric(percDiff)))+
+    ggplot(data=diff, aes(x=as.numeric(percDiff)))+
         geom_density(fill='firebrick4')+
         xlim(0,100)+
-        labs(title= "Distribution of the genomic differences",
-             subtitle = (paste0("% from ",round(min(as.numeric(diff$percDiff)),2),
-                                " to ",round(max(as.numeric(diff$percDiff)),2))),
-             x="Extent of genome difference (%)",
-             y="Frequency")+
+        labs(title="Distribution of the genomic differences",
+            subtitle=(paste0("% from ", round(min(as.numeric(diff$percDiff)), 2),
+                                " to ", round(max(as.numeric(diff$percDiff)), 2))),
+            x="Extent of genome difference (%)",
+            y="Frequency")+
         theme_minimal()
 }
 
@@ -42,18 +42,18 @@ plot_diffdensity<-function(diff){
 #' @examples
 #' @export
 
-CNPlot_events <- function(events,events_2,plot_diff=FALSE){
+CNPlot_events <- function(events, events_2, plot_diff=FALSE){
     #calculate % differences
-    unify<-unifySegments(events,events_2)
+    unify<-unifySegments(events, events_2)
     percentage_diff<-getDifference(unify)
 
     #data for plotting
-    chr_sizes <- CNpare:::chr_sizes
+    chr_sizes <- chr_sizes
     chr_sizes$length <- 1e-6 * chr_sizes$length #Convert sizes to Mb
     chr_sizes$offset <- cumsum(chr_sizes$length) - chr_sizes$length #Calculate the interval range of each chr
 
     #plotting
-    if (plot_diff==FALSE){
+    if (plot_diff == FALSE){
         events<-CNconvert(events,chr_sizes)
         events_2<-CNconvert(events_2,chr_sizes)
 
@@ -64,13 +64,13 @@ CNPlot_events <- function(events,events_2,plot_diff=FALSE){
         abline(v=0,lty=1,lwd=1)
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
-              cex.lab=1.1,cex.main=1.5,font.lab=2,family="Palatino",outer=F,
-              sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",events_2$sample," profile"))
+            cex.lab=1.1,cex.main=1.5,font.lab=2,family="Palatino",outer=FALSE,
+            sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",events_2$sample," profile"))
     } else {
         #get unified profiles
         s<-unique(events_2$sample)
-        events<-unify[,c(1:5)]
-        events_2<-unify[,c(1:3,6,5)]
+        events<-unify[,c(seq_len(5))]
+        events_2<-unify[,c(seq_len(3),6,5)]
         colnames(events_2)[4]<-"segVal"
         events_2<-events_2[which(events$segVal!=events_2$segVal),]
         events<-CNconvert(events,chr_sizes)
@@ -83,29 +83,29 @@ CNPlot_events <- function(events,events_2,plot_diff=FALSE){
         abline(v=0,lty=1,lwd=1)
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
-              cex.lab=1.1,cex.main=1.5,font.lab=2,family="Palatino",outer=F,
-              sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",s," profile"))
+            cex.lab=1.1,cex.main=1.5,font.lab=2,family="Palatino",outer=FALSE,
+            sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",s," profile"))
         #legend
         legend(x = "topright", legend = c(paste0(unique(events$sample)," profile"),paste0("Different events in ",s)),
-               fill = c("red", "royalblue"), cex=0.5, xpd = TRUE, inset = c(-0.05,-0.1)) #inset = c(-0.4, -0.2)
+            fill = c("red", "royalblue"), cex=0.5, xpd=TRUE, inset=c(-0.05,-0.1)) #inset = c(-0.4, -0.2)
     }
 
     # Set the axis
-    axis(1,labels = c(1:22,"X"),tick=T,
-         at = chr_sizes$offset+chr_sizes$length/2,cex.axis=1)
+    axis(1, labels=c(seq_len(22),"X"), tick=TRUE,
+        at = chr_sizes$offset+chr_sizes$length/2,cex.axis=1)
 
     lablist<-as.vector(c(0:10))
-    text(par("usr")[4], seq(0, 10, by=1), labels = lablist, srt = 0, pos = 2, xpd = TRUE, offset = 1 ,
-         cex=1.3)
+    text(par("usr")[4], seq(0, 10, by=1), labels=lablist, srt=0, pos=2,
+        xpd=TRUE, offset=1, cex=1.3)
 
     # Plot the first data set
-    for (i in 1:nrow(events)){
+    for (i in nrow(events)){
         e <- events[i,]
         segments(e$start,e$segVal,e$end,e$segVal,lwd=5.,col="red")
     }
 
     # Plot the second data set
-    for (i in 1:nrow(events_2)){
+    for (i in nrow(events_2)){
         e <- events_2[i,]
         segments(e$start,e$segVal,e$end,e$segVal,lwd=5.,col="royalblue")
     }
@@ -159,10 +159,10 @@ plotClusters<-function(matrix, palette, k){
     }
     km.res <- stats::kmeans(matrix, k, nstart=25)
     p<-factoextra::fviz_cluster(km.res, matrix,
-                    palette = palette,
-                    ellipse.type = "euclid", # Concentration ellipse
-                    star.plot = TRUE, # Add segments from centroids to items
-                    repel = TRUE, # Avoid label overplotting (slow)
-                    ggtheme = theme_minimal())
+                                palette = palette,
+                                ellipse.type = "euclid", # Concentration ellipse
+                                star.plot = TRUE, # Add segments from centroids to items
+                                repel = TRUE, # Avoid label overplotting (slow)
+                                ggtheme = theme_minimal())
     p
 }

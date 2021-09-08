@@ -130,7 +130,7 @@ CNPlot_events(exp_cell,mod1_cell,plot_diff = TRUE)
 
 Second, we plotted differences in HCC1428 respect to OVISE:
 ```{r plot_differences2, fig4, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
-CNPlot_events(exp_cell,mod2_cell,plot_diff = T)
+CNPlot_events(exp_cell,mod2_cell,plot_diff = TRUE)
 ```
 
 #### 3) Get the cell line models of the same tissue origin representing the CIN type of interest

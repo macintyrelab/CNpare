@@ -61,7 +61,7 @@ CNPlot_events(exp_cell,mod2_cell)
 CNPlot_events(exp_cell,mod1_cell,plot_diff = TRUE)
 
 ## ----plot_differences2, fig4, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-CNPlot_events(exp_cell,mod2_cell,plot_diff = T)
+CNPlot_events(exp_cell,mod2_cell,plot_diff = TRUE)
 
 ## ----tissue_origin------------------------------------------------------------
 sample="OVISE"

@@ -18,7 +18,7 @@
 unifySegments<-function(posSeg,data){
     #generate output matrix of unified segments of copy number
     cn_new<-c()
-    for(j in 1:nrow(posSeg))
+    for(j in seq_len(nrow(posSeg)))
     {
         chr<-posSeg[j,1]
         start<-posSeg[j,2]
@@ -26,15 +26,15 @@ unifySegments<-function(posSeg,data){
         curr_cn<-data$segVal
         ind<-which(data$chromosome==chr & data$start>=start & data$end<=end)
         if(length(ind)!=0){
-            cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=T))
+            cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=TRUE))
         } else {
             ind<-which(data$chromosome==chr & data$start<=start & data$end<=end)
             if(length(ind)!=0){
-                cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=T))
+                cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=TRUE))
             } else {
                 ind<-which(data$chromosome==chr & data$start>=start & data$end>=end)
                 if(length(ind)!=0){
-                    cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=T))
+                    cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=TRUE))
                 } else {
                 cn_new<-c(cn_new,NA)
                 }
@@ -43,7 +43,7 @@ unifySegments<-function(posSeg,data){
     }
     cn_out<-cbind(posSeg,cn_new)
     colnames(cn_out)<-c("chromosome","start","end","segVal","sample","segVal_B")
-    cn_out<-data.frame(cn_out,stringsAsFactors = F)
+    cn_out<-data.frame(cn_out,stringsAsFactors = FALSE)
     #round absolute copy-number
     cn_out$segVal<-round(cn_out$segVal)
     cn_out$segVal_B<-round(cn_out$segVal_B)
@@ -65,7 +65,7 @@ unifySegments<-function(posSeg,data){
 
 getDifference<- function(unify){
     #get genome size
-    genome_size<-CNpare:::chr_sizes
+    genome_size<-chr_sizes
     genome_size<-sum(genome_size$length)
 
     diff<-c()

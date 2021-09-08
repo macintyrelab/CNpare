@@ -84,7 +84,7 @@ for (i in 1:nrow(both)){
   differences<-rbind(differences,c(gdsc,round(diff,2)))
 }
 colnames(differences)<-c("cellid","percDiff")
-differences<-data.frame(differences,stringsAsFactors = F)
+differences<-data.frame(differences,stringsAsFactors = FALSE)
 differences$percDiff<-as.numeric(differences$percDiff)
 
 ## ----plot_percentage_distribution, fig2, fig.height = 4, fig.width = 4, fig.align = "center", eval=TRUE, echo=FALSE----

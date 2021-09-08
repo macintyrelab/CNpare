@@ -17,8 +17,7 @@
 
 pair_pearson<-function(cell, ccle, ccle.name){
     cor <- cor(cell, ccle, use = "na.or.complete", method = "pearson")
-    cor <- as.data.frame(cbind(id=ccle.name,
-                              cor.coef=cor))
+    cor <- as.data.frame(cbind(id=ccle.name, cor.coef=cor))
     rownames(cor) <- NULL
     return(cor)
 }
@@ -37,8 +36,7 @@ pair_pearson<-function(cell, ccle, ccle.name){
 #' @examples
 
 pair_manhattan<-function(cell, ccle, ccle.name){
-    dist <- cbind(id=ccle.name,
-                 distance=mean(abs(cell - ccle),na.rm=TRUE))
+    dist <- cbind(id=ccle.name, distance=mean(abs(cell - ccle),na.rm=TRUE))
     rownames(dist) <- NULL
     return(dist)
 }
@@ -57,8 +55,7 @@ pair_manhattan<-function(cell, ccle, ccle.name){
 #' @examples
 
 pair_euclidean<-function(cell, ccle, ccle.name){
-    dist <- cbind(id=ccle.name,
-                  distance=sqrt(sum((cell - ccle)^2,na.rm=TRUE)))
+    dist <- cbind(id=ccle.name, distance=sqrt(sum((cell - ccle)^2,na.rm=TRUE)))
 
     rownames(dist) <- NULL
     return(dist)
@@ -78,11 +75,9 @@ pair_euclidean<-function(cell, ccle, ccle.name){
 #' @examples
 
 pair_cosine<-function(cell, ccle, ccle.name){
-    cos_sim <- (sum(cell*ccle,na.rm=TRUE))/
-        (sqrt(sum(cell^2,na.rm = TRUE))*sqrt(sum(ccle^2,na.rm = TRUE)))
-    dist <- cbind(id=ccle.name,
-                  cos_sim=cos_sim,
-                  distance=1-cos_sim)
+    cos_sim<-(sum(cell*ccle,na.rm=TRUE))/
+            (sqrt(sum(cell^2,na.rm = TRUE))*sqrt(sum(ccle^2,na.rm = TRUE)))
+    dist<-cbind(id=ccle.name, cos_sim=cos_sim, distance=1-cos_sim)
 
     rownames(dist) <- NULL
     return(dist)
@@ -110,37 +105,35 @@ getSimilarities<-function(dat1, dat2, method="all"){
     for (i in samps)
     {
         cell_cn  <- cn_matrix[,which(colnames(cn_matrix)==i)]
-
         if (method == "all" | method == "pearson"){
-            corr <- lapply(1:ncol(dat2),
+            corr <- lapply(seq_len(ncol(dat2)),
                            function(x) pair_pearson(cell=cell_cn,
-                                                         ccle=dat2[,x],
-                                                         ccle.name=colnames(dat2)[x]))
+                                                    ccle=dat2[,x],
+                                                    ccle.name=colnames(dat2)[x]))
             corr <- do.call(rbind,corr)
             out[['pearson']][[i]] <- corr
-
         }
         if (method == "all" | method == "manhattan"){
-            man <- lapply(1:ncol(dat2),
-                           function(x) pair_manhattan(cell=cell_cn,
-                                                      ccle=dat2[,x],
-                                                      ccle.name=colnames(dat2)[x]))
+            man <- lapply(seq_len(ncol(dat2)),
+                          function(x) pair_manhattan(cell=cell_cn,
+                                                     ccle=dat2[,x],
+                                                     ccle.name=colnames(dat2)[x]))
             man <- do.call(rbind,man)
             out[['manhattan']][[i]] <- as.data.frame(man)
         }
         if (method == "all" | method == "euclidean"){
-            eu <- lapply(1:ncol(dat2),
-                          function(x) pair_euclidean(cell=cell_cn,
-                                                     ccle=dat2[,x],
-                                                     ccle.name=colnames(dat2)[x]))
+            eu <- lapply(seq_len(ncol(dat2)),
+                         function(x) pair_euclidean(cell=cell_cn,
+                                                    ccle=dat2[,x],
+                                                    ccle.name=colnames(dat2)[x]))
             eu <- do.call(rbind,eu)
             out[['euclidean']][[i]] <- as.data.frame(eu)
         }
         if (method == "all" | method == "cosine"){
-            cos <- lapply(1:ncol(dat2),
+            cos <- lapply(seq_len(ncol(dat2)),
                          function(x) pair_cosine(cell=cell_cn,
-                                                    ccle=dat2[,x],
-                                                    ccle.name=colnames(dat2)[x]))
+                                                 ccle=dat2[,x],
+                                                 ccle.name=colnames(dat2)[x]))
             cos <- do.call(rbind,cos)
             out[['cosine']][[i]] <- as.data.frame(cos)
         }
@@ -162,7 +155,6 @@ getSimilarities<-function(dat1, dat2, method="all"){
         colnames(measures)<-c("fileid", "id","r","manhattan","euclidean","cos_sim")
         return(measures)
     }
-
     #or return only the metric desired
     else if (method=="pearson"){
         return(pearson)
@@ -197,7 +189,7 @@ getTopHit<-function(samples, measure, method="all"){
         for (i in samples){
             m<-measure[measure$cellid%in%i,]
             m<-m[order(-m$r),]
-            top<-m[1,c(1:2)]
+            top<-m[1,c(seq_len(2))]
             tops[['pearson']][[i]]<-top
         }
     }
@@ -205,7 +197,7 @@ getTopHit<-function(samples, measure, method="all"){
         for (i in samples){
             m<-measure[measure$cellid%in%i,]
             m<-m[order(-m$cos_sim),]
-            top<-m[1,c(1:2)]
+            top<-m[1,c(seq_len(2))]
             tops[['cosine']][[i]]<-top
         }
     }
@@ -213,7 +205,7 @@ getTopHit<-function(samples, measure, method="all"){
         for (i in samples){
             m<-measure[measure$cellid%in%i,]
             m<-m[order(m$manhattan),]
-            top<-m[1,c(1:2)]
+            top<-m[1,c(seq_len(2))]
             tops[['manhattan']][[i]]<-top
         }
     }
@@ -221,7 +213,7 @@ getTopHit<-function(samples, measure, method="all"){
         for (i in samples){
             m<-measure[measure$cellid%in%i,]
             m<-m[order(m$euclidean),]
-            top<-m[1,c(1:2)]
+            top<-m[1,c(seq_len(2))]
             tops[['euclidean']][[i]]<-top
         }
     }

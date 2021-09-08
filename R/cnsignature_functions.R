@@ -19,32 +19,32 @@
 
 extractCopynumberFeatures<-function(CN_data, cores = 1){
     #get chromosome lengths
-    chrlen<-CNpare:::chrlen
+    chrlen<-chrlen
 
     #get centromere locations
-    gaps<-CNpare:::gaps
+    gaps<-gaps
     centromeres<-gaps[gaps[,8]=="centromere",]
 
     if(cores > 1) {
         doMC::registerDoMC(cores)
 
-        temp_list = foreach::foreach(i=1:6) %dopar% {
-            if(i == 1){
-                list(segsize = getSegsize(CN_data) )
-            } else if (i == 2) {
-                list(bp10MB = getBPnum(CN_data,chrlen) )
-            } else if (i == 3) {
-                list(osCN = getOscilation(CN_data,chrlen) )
-            } else if (i == 4) {
-                list(bpchrarm = getCentromereDistCounts(CN_data,centromeres,chrlen) )
-            } else if (i == 5) {
-                list(changepoint = getChangepointCN(CN_data) )
+        temp_list = foreach::foreach(nfeat=seq_len(6)) %dopar% {
+            if(nfeat == 1){
+                list(segsize = getSegsize(CN_data))
+            } else if (nfeat == 2) {
+                list(bp10MB = getBPnum(CN_data,chrlen))
+            } else if (nfeat == 3) {
+                list(osCN = getOscilation(CN_data,chrlen))
+            } else if (nfeat == 4) {
+                list(bpchrarm = getCentromereDistCounts(CN_data,centromeres,chrlen))
+            } else if (nfeat == 5) {
+                list(changepoint = getChangepointCN(CN_data))
             } else {
-                list(copynumber = getCN(CN_data) )
+                list(copynumber = getCN(CN_data))
             }
 
         }
-        unlist( temp_list, recursive = FALSE )
+        unlist(temp_list, recursive = FALSE)
     } else {
 
         segsize<-getSegsize(CN_data)
@@ -74,10 +74,10 @@ extractCopynumberFeatures<-function(CN_data, cores = 1){
 quantifySignatures<-function(sample_by_component,component_by_signature=NULL){
     if(is.null(component_by_signature))
     {
-        component_by_signature <- CNpare:::feat_sig_mat
+        component_by_signature <- feat_sig_mat
     }
     signature_by_sample<-YAPSA::LCD(t(sample_by_component),
-                                    YAPSA:::normalize_df_per_dim(component_by_signature,2))
+                                    YAPSA::normalize_df_per_dim(component_by_signature,2))
     signature_by_sample<-normaliseMatrix(signature_by_sample)
     signature_by_sample
 }
@@ -109,8 +109,7 @@ generateSampleByComponentMatrix<-function(CN_features, all_components=NULL, core
         doMC::registerDoMC(cores)
 
         full_mat = foreach(feat=feats, .combine=cbind) %dopar% {
-            calculateSumOfPosteriors(CN_features[[feat]],all_components[[feat]],
-                                     feat, rowIter = rowIter, cores = subcores)
+            calculateSumOfPosteriors(CN_features[[feat]],all_components[[feat]], feat, rowIter=rowIter, cores=subcores)
         }
     } else {
         full_mat<-cbind(
@@ -149,7 +148,7 @@ generateSampleByComponentMatrix<-function(CN_features, all_components=NULL, core
 calculateSumOfPosteriors<-function(CN_feature,components,name, rowIter = 1000, cores = 1){
     if(cores > 1){
         len = dim(CN_feature)[1]
-        iters = floor( len / rowIter )
+        iters = floor(len/rowIter)
         lastiter = iters[length(iters)]
 
         doMC::registerDoMC(cores)
@@ -179,7 +178,7 @@ calculateSumOfPosteriors<-function(CN_feature,components,name, rowIter = 1000, c
     {
         posterior_sum<-posterior_sum[,order(params)]
     }
-    colnames(posterior_sum)<-paste0(name,1:ncol(posterior_sum))
+    colnames(posterior_sum)<-paste0(name,seq_len(ncol(posterior_sum)))
     rownames(posterior_sum)<-rownames(unique(mat$ID))
     posterior_sum
 }
@@ -216,7 +215,7 @@ getSegsize<-function(abs_profiles){
         out<-rbind(out,cbind(ID=rep(i,length(seglen)),value=seglen))
     }
     rownames(out)<-NULL
-    data.frame(out,stringsAsFactors = F)
+    data.frame(out,stringsAsFactors = FALSE)
 }
 
 
@@ -257,7 +256,7 @@ getBPnum<-function(abs_profiles,chrlen){
         out<-rbind(out,cbind(ID=rep(i,length(allBPnum)),value=allBPnum))
     }
     rownames(out)<-NULL
-    data.frame(out,stringsAsFactors = F)
+    data.frame(out,stringsAsFactors = FALSE)
 }
 
 
@@ -316,7 +315,7 @@ getOscilation<-function(abs_profiles,chrlen){
         }
     }
     rownames(out)<-NULL
-    data.frame(out,stringsAsFactors = F)
+    data.frame(out,stringsAsFactors = FALSE)
 }
 
 
@@ -377,7 +376,7 @@ getCentromereDistCounts<-function(abs_profiles,centromeres,chrlen){
         }
     }
     rownames(out)<-NULL
-    data.frame(out,stringsAsFactors = F)
+    data.frame(out,stringsAsFactors = FALSE)
 }
 
 
@@ -421,7 +420,7 @@ getChangepointCN<-function(abs_profiles){
         out<-rbind(out,cbind(ID=rep(i,length(allcp)),value=allcp))
     }
     rownames(out)<-NULL
-    data.frame(out,stringsAsFactors = F)
+    data.frame(out,stringsAsFactors = FALSE)
 }
 
 
@@ -455,7 +454,7 @@ getCN<-function(abs_profiles){
         out<-rbind(out,cbind(ID=rep(i,length(cn)),value=cn))
     }
     rownames(out)<-NULL
-    data.frame(out,stringsAsFactors = F)
+    data.frame(out,stringsAsFactors = FALSE)
 }
 
 
@@ -509,13 +508,13 @@ getSegTable<-function(x){
         sn.rle<-rle(snfilt)
         starts <- cumsum(c(1, sn.rle$lengths[-length(sn.rle$lengths)]))
         ends <- cumsum(sn.rle$lengths)
-        lapply(1:length(sn.rle$lengths), function(s) {
+        lapply(seq_len(length(sn.rle$lengths)), function(s) {
             from <- fdfilt$start[starts[s]]
             to <- fdfilt$end[ends[s]]
             segValue <- sn.rle$value[s]
             c(fdfilt$chromosome[starts[s]], from, to, segValue)
         }) -> segtmp
-        segTableRaw <- data.frame(matrix(unlist(segtmp), ncol=4, byrow=T),stringsAsFactors=F)
+        segTableRaw <- data.frame(matrix(unlist(segtmp), ncol=4, byrow=TRUE),stringsAsFactors=FALSE)
         segTable<-rbind(segTable,segTableRaw)
     }
     colnames(segTable) <- c("chromosome", "start", "end", "segVal")
@@ -561,7 +560,7 @@ normaliseMatrix<-function(signature_by_sample,sig_thresh=0.01){
 
 lower_norm<-function(x,sig_thresh=0.01){
     new_x<-x
-    for(i in 1:length(x))
+    for(i in length(x))
     {
         if(x[i]<sig_thresh)
         {
