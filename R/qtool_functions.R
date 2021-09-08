@@ -146,13 +146,13 @@ getSimilarities<-function(dat1, dat2, method="all"){
         }
     }
 
-    pearson<-rbindlist(out[['pearson']], idcol=TRUE)
+    pearson<-data.table::rbindlist(out[['pearson']], idcol=TRUE)
     pearson$cor.coef<-as.numeric(pearson$cor.coef)
-    manhattan<-rbindlist(out[['manhattan']], idcol=TRUE)
+    manhattan<-data.table::rbindlist(out[['manhattan']], idcol=TRUE)
     manhattan$distance<-as.numeric(manhattan$distance)
-    euclidean<-rbindlist(out[['euclidean']], idcol=TRUE)
+    euclidean<-data.table::rbindlist(out[['euclidean']], idcol=TRUE)
     euclidean$distance<-as.numeric(euclidean$distance)
-    cosine<-rbindlist(out[['cosine']], idcol=TRUE)
+    cosine<-data.table::rbindlist(out[['cosine']], idcol=TRUE)
     cosine$cos_sim<-as.numeric(cosine$cos_sim)
     cosine$distance<-as.numeric(cosine$distance)
 
@@ -226,10 +226,10 @@ getTopHit<-function(samples, measure, method="all"){
         }
     }
 
-    pearson<-rbindlist(tops[['pearson']])
-    manhattan<-rbindlist(tops[['manhattan']])
-    euclidean<-rbindlist(tops[['euclidean']])
-    cosine<-rbindlist(tops[['cosine']])
+    pearson<-data.table::rbindlist(tops[['pearson']])
+    manhattan<-data.table::rbindlist(tops[['manhattan']])
+    euclidean<-data.table::rbindlist(tops[['euclidean']])
+    cosine<-data.table::rbindlist(tops[['cosine']])
 
     #join all top hits and return a data.frame
     if (method=="all"){

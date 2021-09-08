@@ -10,14 +10,13 @@ Description: CNpare can be used to:
     1) calculate similarities between copy-number profiles
     2) quantify the extent of genome differences between copy-number profiles
     3) compare profiles based on copy-number signatures
+Depends: 
+    R (>= 2.10)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Suggests: 
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
 Imports: 
     data.table,
     Biobase,
@@ -27,5 +26,7 @@ Imports:
     foreach,
     ggplot2,
     YAPSA
-Depends: 
-    R (>= 2.10)
+Suggests: 
+    knitr, 
+    rmarkdown
+VignetteBuilder: knitr

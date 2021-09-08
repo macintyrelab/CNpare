@@ -4,10 +4,10 @@
 \alias{plotClusters}
 \title{Plots a PCA reduction colored by cluster group}
 \usage{
-plotClusters(signs, palette, k)
+plotClusters(matrix, palette, k)
 }
 \arguments{
-\item{signs}{matrix with levels of exposure to each signature}
+\item{matrix}{matrix with samples in rows and variables in columns}
 
 \item{palette}{vector with colors to use for each group. The length of this
 vector must be equal to the number of cluster (k)}
@@ -19,6 +19,6 @@ optimal number of clusters before}
 A plot with samples clustered by similarity in signature exposition
 }
 \description{
-This function draws a cluster plot with samples grouped by
-exposure levels to ovarian copy-number signatures
+This function draws a scatter plot with samples grouped and
+colored according to its cluster assignment
 }

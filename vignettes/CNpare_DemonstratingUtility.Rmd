@@ -6,16 +6,15 @@ author:
   - Blas Chaves, bchavesu@ext.cnio.es
   - Geoff Macintyre, gmacintyre@cnio.es
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output:
-  html_document:
-    number_sections: no
-    theme: simplex
-    toc: yes
-    toc_float: yes
-    df_print: paged
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
@@ -166,12 +165,12 @@ signature_quantification <- quantifySignatures(sample_by_component)
 The first step when using k-means clustering is to indicate the number of clusters (k). Therefore, we first estimated the optimal number of clusters.
 
 ```{r plot_k_optimal, fig5, fig.height = 3, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE}
-fviz_nbclust(t(signature_quantification), kmeans, method = "wss")
+factoextra::fviz_nbclust(t(signature_quantification), kmeans, method = "wss")
 ```
 
 Then, we computed the k-means clustering with k = 4 (optimal as it appears to be the bend in the knee), Principal Components is used to plot data, which is colored according to its cluster assignment.
 ```{r plot_clusters, fig6, fig.height = 6, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE}
-plotClusters(signs = t(signature_quantification),
+plotClusters(matrix = t(signature_quantification),
              palette = c("#2E9FDF", "#00AFBB", "#E7B800", "#FC4E07"),
              k=4)
 ```

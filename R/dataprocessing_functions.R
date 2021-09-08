@@ -61,7 +61,7 @@ getCINProfiles <- function(segcn,samples){
 #' @examples
 
 getCNbins <- function(posBins,data,samples){
-    pb=rbindlist(posBins)
+    pb=data.table::rbindlist(posBins)
     CNmatrix <- matrix(nrow = nrow(pb), ncol = length(samples)) #Create the matrix
     colnames(CNmatrix) <- samples
 

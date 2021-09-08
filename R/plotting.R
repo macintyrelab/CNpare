@@ -6,6 +6,7 @@
 #' @title Density plot showing the distribution of genome differences
 #' @description This function draws the extent of genome differences across all comparisons
 #' @name plot_diffdensity
+#' @import ggplot2
 #'
 #' @param diff dataframe with cell names 'cellid' and genome differences 'percDiff'
 #'
@@ -139,11 +140,11 @@ CNconvert <- function(e,base){
 
 
 #' @title Plots a PCA reduction colored by cluster group
-#' @description This function draws a cluster plot with samples grouped by
-#' exposure levels to ovarian copy-number signatures
+#' @description This function draws a scatter plot with samples grouped and
+#' colored according to its cluster assignment
 #' @name plotClusters
 #'
-#' @param signs matrix with levels of exposure to each signature
+#' @param matrix matrix with samples in rows and variables in columns
 #' @param palette vector with colors to use for each group. The length of this
 #' vector must be equal to the number of cluster (k)
 #' @param k number of clusters. It is recommended to estimate the
@@ -152,12 +153,12 @@ CNconvert <- function(e,base){
 #' @examples
 #' @export
 
-plotClusters<-function(signs, palette, k){
+plotClusters<-function(matrix, palette, k){
     if (length(palette) != k) {
         stop('Number of colors must be equal to number of clusters')
     }
-    km.res <- kmeans(signs, k, nstart=25)
-    p<-fviz_cluster(km.res, signs,
+    km.res <- stats::kmeans(matrix, k, nstart=25)
+    p<-factoextra::fviz_cluster(km.res, matrix,
                     palette = palette,
                     ellipse.type = "euclid", # Concentration ellipse
                     star.plot = TRUE, # Add segments from centroids to items

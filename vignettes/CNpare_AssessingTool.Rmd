@@ -1,21 +1,20 @@
 ---
-title: "CNpare Tool: Comparison of copy-number profiles"
-subtitle: Testing its ability to find the closest copy-number profile
+title: 'CNpare: Comparing tumour copy-number profiles'
+subtitle: "Testing its ability to find the closest copy-number profile"
 author:
   - Barbara Hernando, bhernando@cnio.es
   - Blas Chaves, bchavesu@ext.cnio.es
   - Geoff Macintyre, gmacintyre@cnio.es
 date: "`r format(Sys.time(), '%d %B, %Y')`"
-output:
-  html_document:
-    number_sections: no
-    theme: simplex
-    toc: yes
-    toc_float: yes
-    df_print: paged
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(message = FALSE)
 knitr::opts_chunk$set(warning = FALSE)
