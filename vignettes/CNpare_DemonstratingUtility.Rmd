@@ -1,6 +1,5 @@
 ---
-title: 'CNpare: Comparing tumour copy-number profiles'
-subtitle: Indentifying the most representative CIN model
+title: "Indentifying the most representative CIN model"
 author:
   - Barbara Hernando, bhernando@cnio.es
   - Blas Chaves, bchavesu@ext.cnio.es

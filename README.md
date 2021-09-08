@@ -6,12 +6,12 @@
 ## Summary of the package
 
 **CNpare** is designed to compare and contrast genome-wide tumour copy
-number profiles. By using CNpare, one can:
+number profiles. CNpare can be used for:
 
--   Calculate similarities between copy-number profiles
--   Quantify the percentage of genome differences between copy-number
+-   Calculating similarities between copy-number profiles
+-   Quantifying the percentage of genome differences between copy-number
     profiles
--   Compare copy-number profiles based on copy-number signatures
+-   Comparing copy-number profiles based on copy-number signatures
 
 ## Installation
 
@@ -27,7 +27,7 @@ library(CNpare)
 ### Input data
 
 The most basic initial input to the CNpare package consists of a data
-frame containing the copy number profile segmented from a tumour sample.
+frame containing the segmented copy number profile from a tumor sample.
 
 This structure must contain the following columns:
 
@@ -40,8 +40,13 @@ This structure must contain the following columns:
 Alternatively, a `QDNAseqCopyNumbers` object can be also used as input.
 
 The segmented profile used as input needs to be transformed to bin-level
-copy number profiles. This can be done using `getCNbins()`. Genomic
-positions of bins can be obtained using `getBinsStartsEnds()`.
+copy number profiles. This can be done using `getCNbins()`, which needs
+the following arguments:
+
+-   `posBins` – genomic positions of bins. These can be obtained using
+    `getBinsStartsEnds()`
+-   `data` – segmented copy number
+-   `samples` – vector with the name of samples
 
 This package includes `cells_segcn.RData`, a dataframe with copy-number
 profiles of 1,417 human cancer cell lines from the Cancer Cell Line

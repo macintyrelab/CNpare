@@ -1,6 +1,5 @@
 ---
-title: 'CNpare: Comparing tumour copy-number profiles'
-subtitle: "Testing its ability to find the closest copy-number profile"
+title: "Testing its ability to find the closest copy-number profile"
 author:
   - Barbara Hernando, bhernando@cnio.es
   - Blas Chaves, bchavesu@ext.cnio.es
