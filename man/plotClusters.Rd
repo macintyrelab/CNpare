@@ -22,3 +22,8 @@ A plot with samples clustered by similarity in signature exposition
 This function draws a scatter plot with samples grouped and
 colored according to its cluster assignment
 }
+\examples{
+matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
+    s3=runif(10, min=0, max=1))
+plotClusters(matrix, palette=c("#2E9FDF", "#E7B800"), k=2)
+}

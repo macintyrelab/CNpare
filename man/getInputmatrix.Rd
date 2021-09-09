@@ -15,3 +15,10 @@ matrix with copy numbers of all samples
 \description{
 This function prepare data for comparisons
 }
+\examples{
+posBins <- lapply(seq_len(22),function(chr)
+    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+exp_cell <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1])
+colnames(exp_cell)<-unique(cells_segcn$sample)[1]
+cnmatrix <- getInputmatrix(exp_cell)
+}

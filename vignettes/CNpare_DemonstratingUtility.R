@@ -34,8 +34,8 @@ colnames(cells_segcn)[5]<-"sample"
 ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample))
 
 ## ----comparisons, warning=FALSE-----------------------------------------------
-exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVISE"])
-colnames(exp_cell)<-"OVISE"
+exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="COV362"])
+colnames(exp_cell)<-"COV362"
 
 measures<-getSimilarities(dat1=exp_cell, dat2=ccle_cn, method="all")
 
@@ -44,7 +44,7 @@ measures<-measures[order(measures$manhattan),]
 head(measures,5)
 
 ## ----plot_top1, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-exp_cell=cells_segcn[cells_segcn$sample=="OVISE",]
+exp_cell=cells_segcn[cells_segcn$sample=="COV362",]
 mod1_cell=cells_segcn[cells_segcn$sample=="KCI-MOH1",]
 CNPlot_events(exp_cell,mod1_cell)
 
@@ -53,7 +53,7 @@ measures<-measures[order(-measures$r),]
 head(measures,5)
 
 ## ----plot_top2, fig2, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-exp_cell=cells_segcn[cells_segcn$sample=="OVISE",]
+exp_cell=cells_segcn[cells_segcn$sample=="COV362",]
 mod2_cell=cells_segcn[cells_segcn$sample=="HCC1428",]
 CNPlot_events(exp_cell,mod2_cell)
 
@@ -64,7 +64,7 @@ CNPlot_events(exp_cell,mod1_cell,plot_diff = TRUE)
 CNPlot_events(exp_cell,mod2_cell,plot_diff = TRUE)
 
 ## ----tissue_origin------------------------------------------------------------
-sample="OVISE"
+sample="COV362"
 cells.tissue<-as.character(na.omit(CCLE_metadata$Cell.line.primary.name[CCLE_metadata$Site.Primary == CCLE_metadata$Site.Primary[CCLE_metadata$Cell.line.primary.name == sample]]))
 tissue_segcn<-cells_segcn[cells_segcn$sample %in% cells.tissue,]
 tissue.profiles<-getProfiles(segcn=tissue_segcn, samples=unique(tissue_segcn$sample))

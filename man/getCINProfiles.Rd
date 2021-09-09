@@ -19,5 +19,5 @@ This function select samples with detectable CIN
 }
 \examples{
 cin.profiles <- getCINProfiles(segcn=cells_segcn,
-    samples=unique(cells_segcn$sample))
+    samples=unique(cells_segcn$sample)[1:10])
 }

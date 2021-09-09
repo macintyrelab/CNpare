@@ -15,3 +15,7 @@ A density plot with the distribution. The min and max value is also reported
 \description{
 This function draws the extent of genome differences across all comparisons
 }
+\examples{
+differences <- as.data.frame(cbind(cellid=c(1:5), diff=runif(5, min=0, max=100)))
+plot_diffdensity(differences)
+}

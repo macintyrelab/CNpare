@@ -11,8 +11,10 @@
 #' @param diff dataframe with cell names 'cellid' and genome differences 'percDiff'
 #'
 #' @return A density plot with the distribution. The min and max value is also reported
-#' @examples
 #' @export
+#' @examples
+#' differences <- as.data.frame(cbind(cellid=c(1:5), diff=runif(5, min=0, max=100)))
+#' plot_diffdensity(differences)
 
 plot_diffdensity<-function(diff){
     colnames(diff)[2]<-"percDiff"
@@ -39,8 +41,11 @@ plot_diffdensity<-function(diff){
 #' the second profile may be plotted. Default is FALSE
 #' @return A plot with copy-number profiles of two samples. The % genome difference
 #' between profiles is also reported.
-#' @examples
 #' @export
+#' @examples
+#' exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
+#' mod_cell=cells_segcn[cells_segcn$sample=="42-MG-BA",]
+#' CNPlot_events(exp_cell,mod_cell)
 
 CNPlot_events <- function(events, events_2, plot_diff=FALSE){
     #calculate % differences
@@ -52,7 +57,6 @@ CNPlot_events <- function(events, events_2, plot_diff=FALSE){
     chr_sizes$length <- 1e-6 * chr_sizes$length #Convert sizes to Mb
     chr_sizes$offset <- cumsum(chr_sizes$length) - chr_sizes$length #Calculate the interval range of each chr
 
-    #plotting
     if (plot_diff == FALSE){
         events<-CNconvert(events,chr_sizes)
         events_2<-CNconvert(events_2,chr_sizes)
@@ -62,9 +66,10 @@ CNPlot_events <- function(events, events_2, plot_diff=FALSE){
         plot.window(xlim=c(0,sum(events$length)),ylim=c(0,10),yaxs="i",xaxs="r")
         abline(v=chr_sizes$offset,lty=2,lwd=1)
         abline(v=0,lty=1,lwd=1)
+
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
-            cex.lab=1.1,cex.main=1.5,font.lab=2,family="Palatino",outer=FALSE,
+            cex.lab=1.1,cex.main=1.5,font.lab=2,outer=FALSE,
             sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",events_2$sample," profile"))
     } else {
         #get unified profiles
@@ -81,9 +86,10 @@ CNPlot_events <- function(events, events_2, plot_diff=FALSE){
         plot.window(xlim=c(0,sum(events$length)),ylim=c(0,10),yaxs="i",xaxs="r")
         abline(v=chr_sizes$offset,lty=2,lwd=1)
         abline(v=0,lty=1,lwd=1)
+
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
-            cex.lab=1.1,cex.main=1.5,font.lab=2,family="Palatino",outer=FALSE,
+            cex.lab=1.1,cex.main=1.5, font.lab=2, outer=FALSE,
             sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",s," profile"))
         #legend
         legend(x = "topright", legend = c(paste0(unique(events$sample)," profile"),paste0("Different events in ",s)),
@@ -99,13 +105,13 @@ CNPlot_events <- function(events, events_2, plot_diff=FALSE){
         xpd=TRUE, offset=1, cex=1.3)
 
     # Plot the first data set
-    for (i in nrow(events)){
+    for (i in seq_len(nrow(events))){
         e <- events[i,]
         segments(e$start,e$segVal,e$end,e$segVal,lwd=5.,col="red")
     }
 
     # Plot the second data set
-    for (i in nrow(events_2)){
+    for (i in seq_len(nrow(events_2))){
         e <- events_2[i,]
         segments(e$start,e$segVal,e$end,e$segVal,lwd=5.,col="royalblue")
     }
@@ -119,8 +125,13 @@ CNPlot_events <- function(events, events_2, plot_diff=FALSE){
 #' @param base sizes of chromosomes
 #'
 #' @return segment table prepared for plotting
-#' @examples
 #' @export
+#' @examples
+#' exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
+#' base=CNpare:::chr_sizes
+#' base$length <- 1e-6 * base$length #Convert sizes to Mb
+#' base$offset <- cumsum(base$length) - base$length #Calculate the interval range of each chr
+#' events<-CNconvert(exp_cell,base)
 
 CNconvert <- function(e,base){
     e$start <- as.numeric(e$start)
@@ -150,8 +161,12 @@ CNconvert <- function(e,base){
 #' @param k number of clusters. It is recommended to estimate the
 #' optimal number of clusters before
 #' @return A plot with samples clustered by similarity in signature exposition
-#' @examples
 #' @export
+#' @examples
+#' matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
+#'     s3=runif(10, min=0, max=1))
+#' plotClusters(matrix, palette=c("#2E9FDF", "#E7B800"), k=2)
+
 
 plotClusters<-function(matrix, palette, k){
     if (length(palette) != k) {

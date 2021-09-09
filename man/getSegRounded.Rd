@@ -17,6 +17,6 @@ This function rounds copy numbers to the closest integer
 }
 \examples{
 profiles <- getProfiles(segcn=cells_segcn,
-    samples=unique(cells_segcn$sample))
+    samples=unique(cells_segcn$sample)[1:10])
 rounded.profiles<-getSegRounded(profiles)
 }

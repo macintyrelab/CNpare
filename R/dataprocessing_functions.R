@@ -39,7 +39,7 @@ getBinsStartsEnds <- function(window=500000,chr,lengthChr){
 #' @export
 #' @examples
 #' cin.profiles <- getCINProfiles(segcn=cells_segcn,
-#'     samples=unique(cells_segcn$sample))
+#'     samples=unique(cells_segcn$sample)[1:10])
 
 getCINProfiles <- function(segcn,samples){
     profiles <- getProfiles(segcn, samples)
@@ -79,7 +79,7 @@ getCNbins <- function(posBins,data,samples){
         end   <- as.numeric(pb[b,3])
         cn <- data[(data$chromosome %in% chrom & data$start<=start & data$end>=end), ]
 
-        for (s in length(samples)){
+        for (s in seq_len(length(samples))){
             if (nrow(cn)!=0){
                 segVal <- cn[cn$sample==samples[s], "segVal"]
                 CNmatrix[b,s] <- ifelse(length(segVal)!=0, segVal, NA)
@@ -129,7 +129,7 @@ getProfiles<-function(segcn,samples){
 #' @export
 #' @examples
 #' profiles <- getProfiles(segcn=cells_segcn,
-#'     samples=unique(cells_segcn$sample))
+#'     samples=unique(cells_segcn$sample)[1:10])
 #' rounded.profiles<-getSegRounded(profiles)
 
 getSegRounded <- function(profiles){
@@ -171,7 +171,7 @@ getSegRounded <- function(profiles){
 #' @export
 #' @examples
 #' profiles <- getProfiles(segcn=cells_segcn,
-#'     samples=unique(cells_segcn$sample))
+#'     samples=unique(cells_segcn$sample)[1:10])
 #' cin.samples<-getCINSamp(profiles)
 
 getCINSamp<-function(profiles){

@@ -14,6 +14,13 @@
 #' @return Pearson's r
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' mod_cell<-as.matrix(ccle_cn[,2])
+#' r <- pair_pearson(exp_cell, mod_cell,unique(cells_segcn$sample)[2])
+
 
 pair_pearson<-function(cell, ccle, ccle.name){
     cor <- cor(cell, ccle, use = "na.or.complete", method = "pearson")
@@ -34,6 +41,12 @@ pair_pearson<-function(cell, ccle, ccle.name){
 #' @return Manhattan distance
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' mod_cell<-as.matrix(ccle_cn[,2])
+#' m <- pair_manhattan(exp_cell, mod_cell,unique(cells_segcn$sample)[2])
 
 pair_manhattan<-function(cell, ccle, ccle.name){
     dist <- cbind(id=ccle.name, distance=mean(abs(cell - ccle),na.rm=TRUE))
@@ -53,6 +66,12 @@ pair_manhattan<-function(cell, ccle, ccle.name){
 #' @return Euclidean distance
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' mod_cell<-as.matrix(ccle_cn[,2])
+#' e <- pair_euclidean(exp_cell, mod_cell,unique(cells_segcn$sample)[2])
 
 pair_euclidean<-function(cell, ccle, ccle.name){
     dist <- cbind(id=ccle.name, distance=sqrt(sum((cell - ccle)^2,na.rm=TRUE)))
@@ -73,6 +92,12 @@ pair_euclidean<-function(cell, ccle, ccle.name){
 #' @return Cosine similarity
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' mod_cell<-as.matrix(ccle_cn[,2])
+#' c <- pair_cosine(exp_cell, mod_cell,unique(cells_segcn$sample)[2])
 
 pair_cosine<-function(cell, ccle, ccle.name){
     cos_sim<-(sum(cell*ccle,na.rm=TRUE))/
@@ -94,6 +119,12 @@ pair_cosine<-function(cell, ccle, ccle.name){
 #' @return dataframe with similarity metrics for all comparisons
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:4])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' colnames(exp_cell)<-unique(cells_segcn$sample)[1]
+#' measures <- getSimilarities(dat1=exp_cell,dat2=ccle_cn)
 
 getSimilarities<-function(dat1, dat2, method="all"){
     #get matrix with cell lines copy-number
@@ -181,6 +212,13 @@ getSimilarities<-function(dat1, dat2, method="all"){
 #' @return dataframe with similarity metrics for all comparisons
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:4])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' colnames(exp_cell)<-unique(ccle_cn$sample)[1]
+#' measures <- getSimilarities(dat1=exp_cell,dat2=ccle_cn)
+#' tophits<-getTopHit(samples=unique(cells_segcn$sample)[1], measure=measures)
 
 getTopHit<-function(samples, measure, method="all"){
     colnames(measure)[1]<-"cellid"
@@ -250,15 +288,21 @@ getTopHit<-function(samples, measure, method="all"){
 #' @title Get input data as matrix
 #' @description This function prepare data for comparisons
 #' @name getInputmatrix
+#' @importFrom methods is
 #'
 #' @param dat bin-level copy numbers
 #' @return matrix with copy numbers of all samples
 #' @export
 #' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' exp_cell <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1])
+#' colnames(exp_cell)<-unique(cells_segcn$sample)[1]
+#' cnmatrix <- getInputmatrix(exp_cell)
 
 getInputmatrix<-function(dat){
     #prepare matrix with cell lines copy-number
-    if(class(dat) == "QDNAseqCopyNumbers") {
+    if(is(dat, "QDNAseqCopyNumbers") == TRUE) {
         cn_matrix <- dat@assayData$copynumber
     } else {
         cn_matrix <- dat

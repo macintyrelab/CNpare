@@ -19,3 +19,11 @@ Cosine similarity
 \description{
 This function calculates the Cosine similarity
 }
+\examples{
+posBins <- lapply(seq_len(22),function(chr)
+    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+exp_cell<-as.matrix(ccle_cn[,1])
+mod_cell<-as.matrix(ccle_cn[,2])
+c <- pair_cosine(exp_cell, mod_cell,unique(cells_segcn$sample)[2])
+}

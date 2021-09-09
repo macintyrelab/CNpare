@@ -21,3 +21,8 @@ between profiles is also reported.
 \description{
 This function draws two copy-number profiles for visual comparison
 }
+\examples{
+exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
+mod_cell=cells_segcn[cells_segcn$sample=="42-MG-BA",]
+CNPlot_events(exp_cell,mod_cell)
+}

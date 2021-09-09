@@ -17,6 +17,6 @@ This function filters out samples with <20 CNAs
 }
 \examples{
 profiles <- getProfiles(segcn=cells_segcn,
-    samples=unique(cells_segcn$sample))
+    samples=unique(cells_segcn$sample)[1:10])
 cin.samples<-getCINSamp(profiles)
 }

@@ -48,7 +48,8 @@ Imports:
     ggplot2,
     YAPSA,
     graphics,
-    stats
+    stats,
+    methods
 Suggests:
     knitr,
     rmarkdown,
