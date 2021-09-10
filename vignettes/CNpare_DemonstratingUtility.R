@@ -34,8 +34,8 @@ colnames(cells_segcn)[5]<-"sample"
 ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample))
 
 ## ----comparisons, warning=FALSE-----------------------------------------------
-exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="KURAMOCHI"])
-colnames(exp_cell)<-"KURAMOCHI"
+exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVKATE"])
+colnames(exp_cell)<-"OVKATE"
 
 measures<-getSimilarities(dat1=exp_cell, dat2=ccle_cn, method="all")
 
@@ -44,27 +44,19 @@ measures<-measures[order(measures$manhattan),]
 head(measures,5)
 
 ## ----plot_top1, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-exp_cell=cells_segcn[cells_segcn$sample=="KURAMOCHI",]
-mod1_cell=cells_segcn[cells_segcn$sample=="NCI-H2444",]
+exp_cell=cells_segcn[cells_segcn$sample=="OVKATE",]
+mod1_cell=cells_segcn[cells_segcn$sample=="Panc 02.03",]
 CNPlot_events(exp_cell,mod1_cell)
 
 ## ----pclosest_cn, echo=FALSE--------------------------------------------------
 measures<-measures[order(-measures$r),]
 head(measures,5)
 
-## ----plot_top2, fig2, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-exp_cell=cells_segcn[cells_segcn$sample=="KURAMOCHI",]
-mod2_cell=cells_segcn[cells_segcn$sample=="MKN1",]
-CNPlot_events(exp_cell,mod2_cell)
-
 ## ----plot_differences1, fig3, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
 CNPlot_events(exp_cell,mod1_cell,plot_diff = TRUE)
 
-## ----plot_differences2, fig4, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-CNPlot_events(exp_cell,mod2_cell,plot_diff = TRUE)
-
 ## ----tissue_origin------------------------------------------------------------
-sample="KURAMOCHI"
+sample="OVKATE"
 cells.tissue<-as.character(na.omit(CCLE_metadata$Cell.line.primary.name[CCLE_metadata$Site.Primary == CCLE_metadata$Site.Primary[CCLE_metadata$Cell.line.primary.name == sample]]))
 tissue_segcn<-cells_segcn[cells_segcn$sample %in% cells.tissue,]
 tissue.profiles<-getProfiles(segcn=tissue_segcn, samples=unique(tissue_segcn$sample))

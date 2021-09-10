@@ -17,3 +17,7 @@ dataframe with segments of the model aligned to those in reference
 \description{
 This function unifies boundaries of copy-number segments
 }
+\examples{
+unify<-unifySegments(posSeg=cells_segcn[cells_segcn$sample=="OVKATE",],
+    data=cells_segcn[cells_segcn$sample=="OV-90",])
+}

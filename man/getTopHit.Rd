@@ -24,7 +24,7 @@ posBins <- lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:4])
 exp_cell<-as.matrix(ccle_cn[,1])
-colnames(exp_cell)<-unique(ccle_cn$sample)[1]
+colnames(exp_cell)<-unique(cells_segcn$sample)[1]
 measures <- getSimilarities(dat1=exp_cell,dat2=ccle_cn)
 tophits<-getTopHit(samples=unique(cells_segcn$sample)[1], measure=measures)
 }

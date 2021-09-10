@@ -14,6 +14,8 @@
 #' @return dataframe with segments of the model aligned to those in reference
 #' @export
 #' @examples
+#' unify<-unifySegments(posSeg=cells_segcn[cells_segcn$sample=="OVKATE",],
+#'     data=cells_segcn[cells_segcn$sample=="OV-90",])
 
 unifySegments<-function(posSeg,data){
     #generate output matrix of unified segments of copy number
@@ -62,6 +64,9 @@ unifySegments<-function(posSeg,data){
 #' @return % genome difference between two copy-number profiles
 #' @export
 #' @examples
+#' unify<-unifySegments(posSeg=cells_segcn[cells_segcn$sample=="OVKATE",],
+#'     data=cells_segcn[cells_segcn$sample=="OV-90",])
+#' diff<-getDifference(unify)
 
 getDifference<- function(unify){
     #get genome size

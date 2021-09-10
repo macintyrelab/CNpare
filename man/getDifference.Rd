@@ -16,3 +16,8 @@ Obtained from unifySegments}
 \description{
 This function computes the \% genome difference
 }
+\examples{
+unify<-unifySegments(posSeg=cells_segcn[cells_segcn$sample=="OVKATE",],
+    data=cells_segcn[cells_segcn$sample=="OV-90",])
+diff<-getDifference(unify)
+}
