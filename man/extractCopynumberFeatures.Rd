@@ -18,3 +18,8 @@ A list with features per sample
 This function extract feactures of CNAs.
 Approach developed by Geoff Macintyre et al. 2018
 }
+\examples{
+profiles <- getProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample)[1:4])
+CN_features<-extractCopynumberFeatures(profiles)
+}

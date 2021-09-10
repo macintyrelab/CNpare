@@ -25,8 +25,12 @@ knitr::opts_chunk$set(
 
 ## Installation
 
-You can install the development version of CNpare from this github repository using devtools package. Once installed, CNpare can be loaded:
+You can install the development version of CNpare as follows:
+```{r, eval=FALSE}
+git clone https://github.com/macintyrelab/CNpare.git
+```
 
+Once installed, CNpare must be loaded
 ```{r, eval=FALSE}
 library(CNpare)
 ```

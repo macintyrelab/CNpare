@@ -18,3 +18,13 @@ A matrix with signature exposures per sample
 This function quantify copy-number signatures.
 Approach developed by Geoff Macintyre et al. 2018
 }
+\examples{
+\dontrun{
+profiles <- getProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample)[1:4])
+CN_features<-extractCopynumberFeatures(profiles)
+sample_by_component <- generateSampleByComponentMatrix(CN_features,
+    all_components=component_parameters)
+signature_quantification <- quantifySignatures(sample_by_component)
+}
+}

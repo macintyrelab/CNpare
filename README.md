@@ -15,8 +15,13 @@ number profiles. CNpare can be used for:
 
 ## Installation
 
-You can install the development version of CNpare from this github
-repository using devtools package. Once installed, CNpare can be loaded:
+You can install the development version of CNpare as follows:
+
+``` r
+git clone https://github.com/macintyrelab/CNpare.git
+```
+
+Once installed, CNpare must be loaded
 
 ``` r
 library(CNpare)
