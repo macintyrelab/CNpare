@@ -309,3 +309,48 @@ getInputmatrix<-function(dat){
     }
     return(cn_matrix)
 }
+
+
+#' @title Get list of samples included in the closest cluster to the input sample
+#' @description This function cluster samples including the input sample or not.
+#' If the input sample is not include, cosine similarity between the input sample
+#' and the cluster centers is computed to obtain the list of samples included
+#' in the closest cluster to the input sample
+#' @name getClusterSamples
+#'
+#' @param matrix matrix with variables in rows and samples in columns
+#' @param cell one-column matrix with data of input sample, with one row per variable
+#' @param include a logical value to indicate if input sample should be used for clustering or not
+#' @return vector with list of samples in the closest cluster of the input sample
+#' @export
+#' @examples
+#' matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
+#'     s3=runif(10, min=0, max=1))
+#' rownames(matrix)<-paste0("c", seq(1,10))
+#' cell<-matrix(runif(n = 3, min = 0, max = 1))
+#' samples<-getClusterSamples(t(matrix), cell, include=FALSE)
+
+getClusterSamples<-function(matrix, cell, include=TRUE){
+    set.seed(1)
+    if (include==TRUE) {
+        m<-cbind(matrix,cell)
+        km.res<-akmeans::akmeans(t(m), d.metric=2, ths3=0.8, mode=3, verbose=FALSE)
+        cluster<-km.res$cluster[names(km.res$cluster)==colnames(cell)]
+        samples<-names(km.res$cluster)[km.res$cluster==cluster]
+
+    } else {
+        km.res<-akmeans::akmeans(t(matrix), d.metric=2, ths3=0.8, mode=3, verbose=FALSE)
+        centers<-t(km.res$centers)
+        colnames(centers)<-seq(1,ncol(centers))
+        cos <- lapply(1:ncol(centers),
+                      function(x) pair_cosine(cell=cell,
+                                              ccle=centers[,x],
+                                              ccle.name=colnames(centers)[x]))
+        cos <- as.data.frame(do.call(rbind,cos))
+        cos$cos_sim <- as.numeric(cos$cos_sim)
+        cos <- cos[order(-cos$cos_sim),]
+        samples <- names(km.res$cluster)[km.res$cluster==cos[1,1]]
+    }
+    return(samples)
+}
+

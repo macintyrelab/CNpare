@@ -150,34 +150,58 @@ CNconvert <- function(e,base){
 }
 
 
-#' @title Plots a PCA reduction colored by cluster group
-#' @description This function draws a scatter plot with samples grouped and
-#' colored according to its cluster assignment
+#' @title Plots a scatter plots with samples clustered
+#' @description This function draws a scatter plot with samples grouped based of signature
+#' exposures. Only the closest cluster to the input sample is colored.
 #' @name plotClusters
 #'
-#' @param matrix matrix with samples in rows and variables in columns
-#' @param palette vector with colors to use for each group. The length of this
-#' vector must be equal to the number of cluster (k)
-#' @param k number of clusters. It is recommended to estimate the
-#' optimal number of clusters before
+#' @param matrix matrix variables in rows and samples in columns
+#' @param samples vector with samples in the closest cluster of the input sample
 #' @return A plot with samples clustered by similarity in signature exposition
 #' @export
 #' @examples
 #' matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
 #'     s3=runif(10, min=0, max=1))
-#' plotClusters(matrix, palette=c("#2E9FDF", "#E7B800"), k=2)
+#' rownames(matrix)<-paste0("c", seq(1,10))
+#' cell<-matrix(runif(n = 3, min = 0, max = 1))
+#' samples<-getClusterSamples(t(matrix), cell, include=FALSE)
+#' plotClusters(t(matrix), samples)
 
 
-plotClusters<-function(matrix, palette, k){
-    if (length(palette) != k) {
-        stop('Number of colors must be equal to number of clusters')
-    }
-    km.res <- stats::kmeans(matrix, k, nstart=25)
-    p<-factoextra::fviz_cluster(km.res, matrix,
-                                palette = palette,
-                                ellipse.type = "euclid", # Concentration ellipse
-                                star.plot = TRUE, # Add segments from centroids to items
-                                repel = TRUE, # Avoid label overplotting (slow)
-                                ggtheme = theme_minimal())
+plotClusters<-function(matrix, samples){
+    #perform clustering
+    set.seed(1)
+    km.res<-akmeans::akmeans(t(matrix), d.metric=2, ths3=0.8, mode=3, verbose=FALSE)
+    #cluster where our sample is included (sample list from getClusterSamples)
+    cluster<-unique(km.res$cluster[names(km.res$cluster) %in% samples])
+
+    #get center values of clusters and select signatures with highest variability among centers
+    centers<-as.data.frame(t(km.res$centers))
+    centers$var<-apply(centers, 1, var)
+    centers<-centers[order(-centers$var),]
+    sig<-paste0("s",rownames(centers[c(1:2),]))
+
+    #plot
+    plot.data<-as.data.frame(t(matrix[rownames(matrix)%in%sig,]))
+    x=colnames(plot.data)[1]
+    y=colnames(plot.data)[2]
+    plot.data$cluster<-as.factor(km.res$cluster)
+    plot.data$sample<-rownames(plot.data)
+
+    col<-matrix(nrow=length(unique(plot.data$cluster)), ncol=1)
+    col[,1]<-"gray70"
+    col[cluster,1]<-"#00AFBB"
+
+    p<-ggpubr::ggscatter(plot.data, x, y,
+                         color="cluster",
+                         shape="cluster",
+                         palette=col[,1],
+                         ellipse = TRUE, ellipse.alpha =  0.2,
+                         ellipse.type = "convex", ellipse.level = 0.95,
+                         mean.point = TRUE,
+                         size = 1.5,
+                         star.plot = TRUE,
+                         label="sample", repel=TRUE,
+                         ggtheme=ggplot2::theme_minimal())
     p
 }

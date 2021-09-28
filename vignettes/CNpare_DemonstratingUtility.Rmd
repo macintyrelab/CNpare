@@ -135,7 +135,7 @@ tissue.profiles<-getProfiles(segcn=tissue_segcn, samples=unique(tissue_segcn$sam
 
 ##### [Quantification of copy-number signatures]{.ul}
 
-Now, we generate a matrix with the activity levels of each copy-number signature per sample
+Now, we generate a matrix with the activity levels of each copy-number signature per sample. 
 ```{r quantify_signs}
 component_parameters<-readRDS(paste0(path_to_data,"component_parameters.rds"))
 
@@ -148,15 +148,22 @@ signature_quantification <- quantifySignatures(sample_by_component)
 
 *K-means clustering* (MacQueen, 1967) is the most commonly used unsupervised machine learning algorithm for partitioning a given data set into a set of k groups. Therefore, we will be able to detect similar samples according to copy-number signature exposures.
 
-The first step when using k-means clustering is to indicate the number of clusters (k). Therefore, we first estimated the optimal number of clusters.
-
-```{r plot_k_optimal, fig5, fig.height = 3, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE}
-factoextra::fviz_nbclust(t(signature_quantification), kmeans, method = "wss")
+Since the aim is to match OVKATE with a group of ovarian cell lines with similar signature activities, clustering analyses can be done excluding the input sample and then asking which cluster is the closest to OVKATE. By default, the `getClusterSamples` includes the input sample for performing the clustering analysis.
+```{r split_signs}
+exp_cell=as.matrix(signature_quantification[,colnames(signature_quantification)=="OVKATE"])
+colnames(exp_cell)<-"OVKATE"
+signature_quantification=signature_quantification[,colnames(signature_quantification)!="OVKATE"]
 ```
 
-Then, we computed the k-means clustering with k = 4 (optimal as it appears to be the bend in the knee), Principal Components is used to plot data, which is colored according to its cluster assignment.
+The `getClusterSamples` function computed the k-means clustering by using cosine similarity and outputs a list of samples included in the closest cluster.. First, the function calculates the optimal number of clusters (k) and then outputs the list of samples clustering with the input sample. In case the input sample is not included in the clustering process, this function asks which cluster is closest to the input sample based on copy number signatures. To this, the cosine similarity between OVKATE and the cluster centers (mean values of the cluster) is computed. 
+```{r closest_cluster}
+samples<-getClusterSamples(matrix=signature_quantification, cell=exp_cell)
+print(samples)
+```
+
+
+Then, data is plotted using a scatter plot following the principal component reduction idea. We selected the two signatures with highest variability across clusters to plot data. Only the closest cluster to the input sample is colored.
 ```{r plot_clusters, fig6, fig.height = 6, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE}
-plotClusters(matrix = t(signature_quantification),
-             palette = c("#2E9FDF", "#00AFBB", "#E7B800", "#FC4E07"),
-             k=4)
+m<-cbind(signature_quantification,exp_cell)
+plotClusters(matrix=m, samples=samples)
 ```
