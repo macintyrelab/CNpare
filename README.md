@@ -95,8 +95,16 @@ except for `component_parameters.rds` which may be downloaded from here:
 preparing an experiment data package for including all data needed for
 identifying copy-number signatures
 
-Finally, using the function `plotClusters()`, profiles are clustered
-according to their exposure to each copy number signature.
+The `getClusterSamples` function can be used to get names of samples
+included in the same (`include=TRUE`, default) or closest
+(`include=FALSE`) cluster to the sample of interest according to the
+exposure to each copy number signature. This function automatically
+identifies the optimal number of clusters. Cosine similarity is used as
+distance metric for clustering.
+
+Finally, using the function `plotClusters()`, samples are plotted by
+showing the two signatures with the highest variation across cluster
+means. Clusters are also represented.
 
 ## Manuscript analysis Rmarkdown
 
@@ -111,5 +119,5 @@ analysis carried out in the manuscript:
 
 To compile this document run knitr to html. Packages required to compile
 the Rmarkdown document include: knitr, dplyr, ggplot2, reshape2,
-data.table, factoextra, flexmix, NMF, stats, splitstackshape, kableExtra
-and magrittr.
+data.table, flexmix, NMF, stats, splitstackshape, kableExtra and
+magrittr.

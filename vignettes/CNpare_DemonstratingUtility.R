@@ -68,11 +68,16 @@ CN_features <- extractCopynumberFeatures(tissue.profiles)
 sample_by_component <- generateSampleByComponentMatrix(CN_features, all_components=component_parameters)
 signature_quantification <- quantifySignatures(sample_by_component)
 
-## ----plot_k_optimal, fig5, fig.height = 3, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE----
-factoextra::fviz_nbclust(t(signature_quantification), kmeans, method = "wss")
+## ----split_signs--------------------------------------------------------------
+exp_cell=as.matrix(signature_quantification[,colnames(signature_quantification)=="OVKATE"])
+colnames(exp_cell)<-"OVKATE"
+signature_quantification=signature_quantification[,colnames(signature_quantification)!="OVKATE"]
+
+## ----closest_cluster----------------------------------------------------------
+samples<-getClusterSamples(matrix=signature_quantification, cell=exp_cell)
+print(samples)
 
 ## ----plot_clusters, fig6, fig.height = 6, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE----
-plotClusters(matrix = t(signature_quantification),
-             palette = c("#2E9FDF", "#00AFBB", "#E7B800", "#FC4E07"),
-             k=4)
+m<-cbind(signature_quantification,exp_cell)
+plotClusters(matrix=m, samples=samples)
 

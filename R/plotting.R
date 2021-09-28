@@ -154,6 +154,7 @@ CNconvert <- function(e,base){
 #' @description This function draws a scatter plot with samples grouped based of signature
 #' exposures. Only the closest cluster to the input sample is colored.
 #' @name plotClusters
+#' @importFrom stats var
 #'
 #' @param matrix matrix variables in rows and samples in columns
 #' @param samples vector with samples in the closest cluster of the input sample

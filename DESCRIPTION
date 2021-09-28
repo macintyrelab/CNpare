@@ -42,14 +42,15 @@ Imports:
     data.table,
     Biobase,
     doMC,
-    factoextra,
     flexmix,
     foreach,
     ggplot2,
     YAPSA,
     graphics,
     stats,
-    methods
+    methods,
+    akmeans,
+    ggpubr
 Suggests:
     knitr,
     rmarkdown,

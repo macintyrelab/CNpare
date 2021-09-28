@@ -420,8 +420,8 @@ getCentromereDistCounts<-function(abs_profiles,centromeres,chrlen){
 #' @param abs_profiles absolute copy-number profiles
 #'
 #' @return Matrix with difference in copy number between adjacent segments
-#' @examples
 #' @export
+#' @examples
 #' profiles <- getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' changepoint<-getChangepointCN(profiles)
@@ -467,8 +467,8 @@ getChangepointCN<-function(abs_profiles){
 #' @param abs_profiles absolute copy-number profiles
 #'
 #' @return Matrix with copy numbers
-#' @examples
 #' @export
+#' @examples
 #' profiles <- getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' copynumber<-getCN(profiles)
@@ -504,8 +504,8 @@ getCN<-function(abs_profiles){
 #' @param abs_profiles absolute copy-number profiles
 #'
 #' @return name of each sample
-#' @examples
 #' @export
+#' @examples
 #' profiles <- getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' samp.names<-getSampNames(profiles)
@@ -575,8 +575,9 @@ getSegTable<-function(x){
 #' @param sig_thresh threshold for each signature. Default is 0.01
 #'
 #' @return matrix with normalized activity of each signature per sample
-#' @examples
 #' @export
+#' @examples
+
 
 normaliseMatrix<-function(signature_by_sample,sig_thresh=0.01){
     norm_const<-colSums(signature_by_sample)
@@ -599,8 +600,8 @@ normaliseMatrix<-function(signature_by_sample,sig_thresh=0.01){
 #' @param sig_thresh threshold for each signature. Default is 0.01
 #'
 #' @return lower normalized value
-#' @examples
 #' @export
+#' @examples
 
 lower_norm<-function(x,sig_thresh=0.01){
     new_x<-x

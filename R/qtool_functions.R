@@ -324,11 +324,11 @@ getInputmatrix<-function(dat){
 #' @return vector with list of samples in the closest cluster of the input sample
 #' @export
 #' @examples
-#' matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
-#'     s3=runif(10, min=0, max=1))
+#' matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),s3=runif(10, min=0, max=1))
 #' rownames(matrix)<-paste0("c", seq(1,10))
 #' cell<-matrix(runif(n = 3, min = 0, max = 1))
-#' samples<-getClusterSamples(t(matrix), cell, include=FALSE)
+#' colnames(cell)<-"input"
+#' samples<-getClusterSamples(t(matrix), cell)
 
 getClusterSamples<-function(matrix, cell, include=TRUE){
     set.seed(1)

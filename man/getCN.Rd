@@ -16,3 +16,8 @@ Matrix with copy numbers
 Helper function for extractCopynumberFeatures.
 Approach developed by Geoff Macintyre et al. 2018
 }
+\examples{
+profiles <- getProfiles(segcn=cells_segcn,
+    samples=unique(cells_segcn$sample)[1:4])
+copynumber<-getCN(profiles)
+}

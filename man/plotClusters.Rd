@@ -2,28 +2,27 @@
 % Please edit documentation in R/plotting.R
 \name{plotClusters}
 \alias{plotClusters}
-\title{Plots a PCA reduction colored by cluster group}
+\title{Plots a scatter plots with samples clustered}
 \usage{
-plotClusters(matrix, palette, k)
+plotClusters(matrix, samples)
 }
 \arguments{
-\item{matrix}{matrix with samples in rows and variables in columns}
+\item{matrix}{matrix variables in rows and samples in columns}
 
-\item{palette}{vector with colors to use for each group. The length of this
-vector must be equal to the number of cluster (k)}
-
-\item{k}{number of clusters. It is recommended to estimate the
-optimal number of clusters before}
+\item{samples}{vector with samples in the closest cluster of the input sample}
 }
 \value{
 A plot with samples clustered by similarity in signature exposition
 }
 \description{
-This function draws a scatter plot with samples grouped and
-colored according to its cluster assignment
+This function draws a scatter plot with samples grouped based of signature
+exposures. Only the closest cluster to the input sample is colored.
 }
 \examples{
 matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
     s3=runif(10, min=0, max=1))
-plotClusters(matrix, palette=c("#2E9FDF", "#E7B800"), k=2)
+rownames(matrix)<-paste0("c", seq(1,10))
+cell<-matrix(runif(n = 3, min = 0, max = 1))
+samples<-getClusterSamples(t(matrix), cell, include=FALSE)
+plotClusters(t(matrix), samples)
 }
