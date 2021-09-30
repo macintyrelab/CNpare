@@ -188,15 +188,19 @@ getSimilarities<-function(dat1, dat2, method="all"){
     }
     #or return only the metric desired
     else if (method=="pearson"){
+        colnames(pearson)<-c("fileid", "id","r")
         return(pearson)
     }
     else if (method=="manhattan"){
+        colnames(manhattan)<-c("fileid", "id","manhattan")
         return(manhattan)
     }
-    else if (method=="cosine"){
+    else if (method=="euclidean"){
+        colnames(euclidean)<-c("fileid", "id","euclidean")
         return(euclidean)
     }
     else if (method=="cosine"){
+        colnames(cosine)<-c("fileid", "id","cos_sim")
         return(cosine)
     }
 }
