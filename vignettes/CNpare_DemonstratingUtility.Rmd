@@ -104,7 +104,7 @@ head(measures,5)
 ```{r plot_top1, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
 exp_cell=cells_segcn[cells_segcn$sample=="OVKATE",]
 mod1_cell=cells_segcn[cells_segcn$sample=="Panc 02.03",]
-CNPlot_events(exp_cell,mod1_cell)
+CNPlot_events(exp_cell,mod1_cell,method_diff = "non-normalized")
 ```
 
 Then, we can print the cell line with the most similar copy-number profile regardless the ploidy (highest pearson's r value). Interestingly, in this example, the same cell line comes out as the most representative cell line for OVKATE.
@@ -117,7 +117,7 @@ head(measures,5)
 
 CNpare also provides a visual representation of the genome differences. To this functionality, we changed the the default argument ``plot_dif` to TRUE. Here, we plotted differences in PANC0203 respect to OVKATE:
 ```{r plot_differences1, fig3, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
-CNPlot_events(exp_cell,mod1_cell,plot_diff = TRUE)
+CNPlot_events(exp_cell,mod1_cell, method_diff = "non-normalized", plot_diff = TRUE)
 ```
 
 #### 3) Get the cell line models of the same tissue origin representing the CIN type of interest

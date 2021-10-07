@@ -4,11 +4,15 @@
 \alias{getDifference}
 \title{Calculation of the extent of differences between two profiles}
 \usage{
-getDifference(unify)
+getDifference(events, events_2, method = "non-normalized")
 }
 \arguments{
-\item{unify}{dataframe with copy numbers in segments of two profiles.
-Obtained from unifySegments}
+\item{events}{segment table with absolute copy numbers of one sample}
+
+\item{events_2}{segment table with absolute copy numbers of the other sample}
+
+\item{method}{method used for calculating difference. Options are "normalized"
+or "non-normalized" by ploidy status. Default is "non-normalized"}
 }
 \value{
 \% genome difference between two copy-number profiles
@@ -17,7 +21,6 @@ Obtained from unifySegments}
 This function computes the \% genome difference
 }
 \examples{
-unify<-unifySegments(posSeg=cells_segcn[cells_segcn$sample=="OVKATE",],
-    data=cells_segcn[cells_segcn$sample=="OV-90",])
-diff<-getDifference(unify)
+diff<-getDifference(events=cells_segcn[cells_segcn$sample=="OVKATE",],
+    events_2=cells_segcn[cells_segcn$sample=="OV-90",])
 }

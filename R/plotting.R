@@ -37,6 +37,8 @@ plot_diffdensity<-function(diff){
 #'
 #' @param events segment table with absolute copy numbers of one sample
 #' @param events_2 segment table with absolute copy numbers of the other sample
+#' @param method_diff method used for calculating difference. Options are "normalized" or
+#' "non-normalized" by ploidy status
 #' @param plot_diff logical indicating if only segments that are different in
 #' the second profile may be plotted. Default is FALSE
 #' @return A plot with copy-number profiles of two samples. The % genome difference
@@ -44,14 +46,14 @@ plot_diffdensity<-function(diff){
 #' @export
 #' @examples
 #' exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
-#' mod_cell=cells_segcn[cells_segcn$sample=="42-MG-BA",]
-#' CNPlot_events(exp_cell,mod_cell)
+#' mod_cell=cells_segcn[cells_segcn$sample=="A172",]
+#' CNPlot_events(exp_cell,mod_cell, method_diff="non-normalized")
 
-CNPlot_events <- function(events, events_2, plot_diff=FALSE){
-    #calculate % differences
-    unify<-unifySegments(events, events_2)
-    percentage_diff<-getDifference(unify)
+CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
+    ##Calculate % differences
+    percentage_diff<-getDifference(events, events_2, method_diff)
 
+    ##Plotting
     #data for plotting
     chr_sizes <- chr_sizes
     chr_sizes$length <- 1e-6 * chr_sizes$length #Convert sizes to Mb
@@ -73,6 +75,7 @@ CNPlot_events <- function(events, events_2, plot_diff=FALSE){
             sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",events_2$sample," profile"))
     } else {
         #get unified profiles
+        unify<-unifySegments(events, events_2)
         s<-unique(events_2$sample)
         events<-unify[,c(seq_len(5))]
         events_2<-unify[,c(seq_len(3),6,5)]

@@ -46,14 +46,14 @@ head(measures,5)
 ## ----plot_top1, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
 exp_cell=cells_segcn[cells_segcn$sample=="OVKATE",]
 mod1_cell=cells_segcn[cells_segcn$sample=="Panc 02.03",]
-CNPlot_events(exp_cell,mod1_cell)
+CNPlot_events(exp_cell,mod1_cell,method_diff = "non-normalized")
 
 ## ----pclosest_cn, echo=FALSE--------------------------------------------------
 measures<-measures[order(-measures$r),]
 head(measures,5)
 
 ## ----plot_differences1, fig3, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-CNPlot_events(exp_cell,mod1_cell,plot_diff = TRUE)
+CNPlot_events(exp_cell,mod1_cell, method_diff = "non-normalized", plot_diff = TRUE)
 
 ## ----tissue_origin------------------------------------------------------------
 sample="OVKATE"

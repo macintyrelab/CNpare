@@ -4,12 +4,15 @@
 \alias{CNPlot_events}
 \title{Visualization of two copy-number profiles}
 \usage{
-CNPlot_events(events, events_2, plot_diff = FALSE)
+CNPlot_events(events, events_2, method_diff, plot_diff = FALSE)
 }
 \arguments{
 \item{events}{segment table with absolute copy numbers of one sample}
 
 \item{events_2}{segment table with absolute copy numbers of the other sample}
+
+\item{method_diff}{method used for calculating difference. Options are "normalized" or
+"non-normalized" by ploidy status}
 
 \item{plot_diff}{logical indicating if only segments that are different in
 the second profile may be plotted. Default is FALSE}
@@ -23,6 +26,6 @@ This function draws two copy-number profiles for visual comparison
 }
 \examples{
 exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
-mod_cell=cells_segcn[cells_segcn$sample=="42-MG-BA",]
-CNPlot_events(exp_cell,mod_cell)
+mod_cell=cells_segcn[cells_segcn$sample=="A172",]
+CNPlot_events(exp_cell,mod_cell, method_diff="non-normalized")
 }

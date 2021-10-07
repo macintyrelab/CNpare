@@ -123,7 +123,7 @@ exp_cell=cells_segcn[cells_segcn$sample==b$cellid,]
 mod_cell=cells_segcn[cells_segcn$sample==b$fileid,]
 exp_cell$sample<-paste0(b$cellid, "-GDSC")
 mod_cell$sample<-paste0(b$cellid, "-CCLE")
-CNPlot_events(exp_cell, mod_cell, plot_diff = FALSE)
+CNPlot_events(exp_cell, mod_cell, method_diff = "non-normalized", plot_diff = FALSE)
 ```
 
 The **second group** corresponds to cell lines that have only match by pearson's r and cosine similarity, but not for manhattan and euclidean distances. These samples present a similar copy-number profiles in terms of focal CNAs, but there are inconcluences in the ploidy estimated by ASCAT using genomic data from CCLE and GDSC. Manhanttan and Euclidean distances do not tolerate whole ploidy shifts. Since pearson correlation test and cosine similarity are normalized measures, they can be used to identify similar profiles regardless of their ploidy magnitude.
@@ -144,7 +144,7 @@ exp_cell=cells_segcn[cells_segcn$sample==b$cellid,]
 mod_cell=cells_segcn[cells_segcn$sample==b$fileid,]
 exp_cell$sample<-paste0(b$cellid, "-GDSC")
 mod_cell$sample<-paste0(b$cellid, "-CCLE")
-CNPlot_events(exp_cell, mod_cell, plot_diff = FALSE)
+CNPlot_events(exp_cell, mod_cell, method_diff="non-normalized", plot_diff = FALSE)
 ```
 
 ##### 2.2) [What is the extent of differences between CCLE- and GDSC-derive profiles?]{.ul}
@@ -159,8 +159,7 @@ for (i in 1:nrow(both)){
   ccle<-both[i,2]
   
   #Calculate the % of difference
-  unify<-unifySegments(cells_segcn[cells_segcn$sample==gdsc,],cells_segcn[cells_segcn$sample==ccle,])
-  diff<-getDifference(unify)
+  diff<-getDifference(cells_segcn[cells_segcn$sample==gdsc,],cells_segcn[cells_segcn$sample==ccle,])
   differences<-rbind(differences,c(gdsc,round(diff,2)))
 }
 colnames(differences)<-c("cellid","percDiff")

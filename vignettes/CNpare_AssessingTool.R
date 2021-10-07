@@ -54,7 +54,7 @@ exp_cell=cells_segcn[cells_segcn$sample==b$cellid,]
 mod_cell=cells_segcn[cells_segcn$sample==b$fileid,]
 exp_cell$sample<-paste0(b$cellid, "-GDSC")
 mod_cell$sample<-paste0(b$cellid, "-CCLE")
-CNPlot_events(exp_cell, mod_cell, plot_diff = FALSE)
+CNPlot_events(exp_cell, mod_cell, method_diff = "non-normalized", plot_diff = FALSE)
 
 ## ----non-allmatch, echo=FALSE-------------------------------------------------
 nontop<-list.tophits[!list.tophits$equal,]
@@ -69,7 +69,7 @@ exp_cell=cells_segcn[cells_segcn$sample==b$cellid,]
 mod_cell=cells_segcn[cells_segcn$sample==b$fileid,]
 exp_cell$sample<-paste0(b$cellid, "-GDSC")
 mod_cell$sample<-paste0(b$cellid, "-CCLE")
-CNPlot_events(exp_cell, mod_cell, plot_diff = FALSE)
+CNPlot_events(exp_cell, mod_cell, method_diff="non-normalized", plot_diff = FALSE)
 
 ## ----calculate_allpercentages-------------------------------------------------
 differences<-c()
@@ -79,8 +79,7 @@ for (i in 1:nrow(both)){
   ccle<-both[i,2]
   
   #Calculate the % of difference
-  unify<-unifySegments(cells_segcn[cells_segcn$sample==gdsc,],cells_segcn[cells_segcn$sample==ccle,])
-  diff<-getDifference(unify)
+  diff<-getDifference(cells_segcn[cells_segcn$sample==gdsc,],cells_segcn[cells_segcn$sample==ccle,])
   differences<-rbind(differences,c(gdsc,round(diff,2)))
 }
 colnames(differences)<-c("cellid","percDiff")
