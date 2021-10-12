@@ -11,7 +11,7 @@ getTopHit(samples, measure, method = "all")
 
 \item{measure}{dataframe with similarity metrics}
 
-\item{method}{similarity metric to use for ordering . Default is all}
+\item{method}{similarity metric to use for ordering. Default is all}
 }
 \value{
 dataframe with similarity metrics for all comparisons
@@ -20,11 +20,11 @@ dataframe with similarity metrics for all comparisons
 This function get the top hit for each comparison per sample
 }
 \examples{
-posBins <- lapply(seq_len(22),function(chr)
+posBins<-lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:4])
+ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 exp_cell<-as.matrix(ccle_cn[,1])
 colnames(exp_cell)<-unique(cells_segcn$sample)[1]
-measures <- getSimilarities(dat1=exp_cell,dat2=ccle_cn)
-tophits<-getTopHit(samples=unique(cells_segcn$sample)[1], measure=measures)
+measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn,method="pearson")
+tophits<-getTopHit(samples=unique(cells_segcn$sample)[1],measure=measures,method="pearson")
 }

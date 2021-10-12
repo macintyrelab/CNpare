@@ -50,7 +50,8 @@ Imports:
     stats,
     methods,
     akmeans,
-    ggpubr
+    ggpubr,
+    tibble
 Suggests:
     knitr,
     rmarkdown,

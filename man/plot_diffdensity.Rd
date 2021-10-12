@@ -10,12 +10,12 @@ plot_diffdensity(diff)
 \item{diff}{dataframe with cell names 'cellid' and genome differences 'percDiff'}
 }
 \value{
-A density plot with the distribution. The min and max value is also reported
+A density plot with the distribution. The min and max value are also reported
 }
 \description{
 This function draws the extent of genome differences across all comparisons
 }
 \examples{
-differences <- as.data.frame(cbind(cellid=c(1:5), diff=runif(5, min=0, max=100)))
+differences<-as.data.frame(cbind(cellid=c(1:5), diff=runif(5, min=0, max=100)))
 plot_diffdensity(differences)
 }

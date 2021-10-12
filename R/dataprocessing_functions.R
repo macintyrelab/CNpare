@@ -68,30 +68,65 @@ getCINProfiles <- function(segcn,samples){
 #'     data=cells_segcn[cells_segcn$sample=="22RV1",],
 #'     samples="22RV1")
 
-getCNbins <- function(posBins,data,samples){
-    pb=data.table::rbindlist(posBins)
-    CNmatrix <- matrix(nrow = nrow(pb), ncol = length(samples)) #Create the matrix
-    colnames(CNmatrix) <- samples
-
-    for (b in seq_len(nrow(pb))){
-        chrom <- as.character(pb[b,1])
-        start <- as.numeric(pb[b,2])
-        end   <- as.numeric(pb[b,3])
-        cn <- data[(data$chromosome %in% chrom & data$start<=start & data$end>=end), ]
-
-        for (s in seq_len(length(samples))){
-            if (nrow(cn)!=0){
-                segVal <- cn[cn$sample==samples[s], "segVal"]
-                CNmatrix[b,s] <- ifelse(length(segVal)!=0, segVal, NA)
-            } else {
-                CNmatrix[b,s] <- NA
-            }
-        }
-    }
-    return(CNmatrix)
+getCNbins<- function(posBins,data,samples){
+    out<-list()
+    out<-lapply(samples, function(s) getCNbins.sample(posBins,
+                                                      data=data[data$sample==s,]))
+    cn<-as.matrix(do.call(cbind,out))
+    colnames(cn)<-samples
+    return(cn)
 }
 
 #### Helper functions ####
+
+#' @title Get copy-number per bins in a sample
+#' @description This is a helper function for transforming segment tables to bin tables
+#' @name getCNbins.sample
+#'
+#' @param posBins list with genomic positions of bins. Each list contains
+#' data from each chromosome. Obtained from getBinsStartsEnds
+#' @param data segment table of copy numbers of one sample
+#'
+#' @return bin table of copy numbers of one sample
+#' @export
+#' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' cell_bin <- getCNbins.sample(posBins=posBins,
+#'     data=cells_segcn[cells_segcn$sample=="22RV1",])
+
+getCNbins.sample <- function(posBins,data){
+    pb=data.table::rbindlist(posBins)
+    out<-list()
+    out<-lapply(seq_len(nrow(pb)), function(b) getCNbins.bin(b,pb,data))
+    cn<-do.call(rbind,out)
+    return(cn)
+}
+
+#' @title Get copy-number in a bin
+#' @description This is a helper function for transforming segment tables to bin tables
+#' @name getCNbins.bin
+#'
+#' @param b bin number
+#' @param pb matrix with genomic positions of bins
+#' @param data segment table of copy numbers of one sample
+#'
+#' @return a list of copy-number values per bin
+#' @export
+#' @examples
+#' posBins <- lapply(seq_len(22),function(chr)
+#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' cell_bin <- getCNbins.bin(b=1,pb=data.table::rbindlist(posBins),
+#'     data=cells_segcn[cells_segcn$sample=="22RV1",])
+
+getCNbins.bin <- function(b,pb,data){
+    chrom <- as.character(pb[b,1])
+    start <- as.numeric(pb[b,2])
+    end   <- as.numeric(pb[b,3])
+    cn <- data[(data$chromosome%in%chrom & data$start<=start & data$end>=end),"segVal"]
+    cn <- ifelse(length(cn)!=0,cn,NA)
+    return(cn)
+}
 
 #' @title Add profiles in a list
 #' @description This function includes all profiles in a list

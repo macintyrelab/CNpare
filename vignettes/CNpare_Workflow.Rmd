@@ -1,0 +1,176 @@
+---
+title: "Indentifying the most representative CIN model"
+author:
+  - Barbara Hernando, bhernando@cnio.es
+  - Blas Chaves, bchavesu@ext.cnio.es
+  - Geoff Macintyre, gmacintyre@cnio.es
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Workflow}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE,comment = "#>")
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(warning = FALSE)
+
+## PACKAGES
+library(dplyr)
+library(CNpare)
+
+# DATA DIRECTORY
+path_to_data<-"C:/Users/bhernando/Desktop/CNIO/Projects/BlasProject/quality_tool/data/"
+```
+
+### Finding the best model of chromosomal instability
+
+This **CNpare Tool** aims at finding the best cell line model for studying a type of chromosomal instability (CIN) in vitro. To this purpose, the model selection can be based on its copy-number profile or on its exposure to copy-number signatures.
+
+This Rmarkdown is an example of how to use this tool.
+
+Here, we selected the OVISE ovarian cancer cell line from the Cancer Cell Line Encyclopedia (CCLE) project as our sample of interest.
+
+We first identified the cell line with the most similar copy-number profile independently of tissue origin.
+
+Then, we selected cell lines of the same tissue origin, quantified the copy-number signatures and obtained a list of cell lines representing the same type of chromosomal instability. For quantifying copy-number signatures, this script implements the computational approach developed by Geoff Macintyre in 2018.
+
+#### 1) Input data
+
+We first get the **RData** files in the `data/` folder:
+
+-   `cells_segcn.RData` -- Absolute copy-number profiles of cancer cell lines generated with *ASCAT*. The segment tables should have the following column headers: "chromosome", "start", "end", "segVal", "sample".
+-   `cells_mapping.RData` Mapping information of cancer cell lines
+-   `CCLE_metadata.RData` Metadata of CCLE database for selecting cell lines by tissue origin
+
+```{r input, include=FALSE}
+cells_segcn<-cells_segcn
+cells_mapping<-cells_mapping
+CCLE_metadata<-CCLE_metadata
+CCLE_metadata$Cell.line.primary.name<-toupper(CCLE_metadata$Cell.line.primary.name)
+```
+
+#### 2) Get the cell line model with the closest copy-number profile
+
+##### [Cell lines data preprocessing]{.ul}
+
+Segmented copy-number profiles of cell lines may be fitted to the genomic positions of bins. Therefore, we split genome in evenly sized bins (default 500 kb) and get their positions. 
+```{r pos_bins}
+allchr=c(1:22) #Add 23 if want to include chrX
+lengthChr<-lengthChr
+posBins <- lapply(allchr,function(chr) 
+    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+```
+
+We selected the CCLE models with available copy-number profile. We also selected profiles with detectable CIN (those with at least 20 CNAs in a profile). Therefore, we discarded profiles with non detectable chromosomal instability. Finally, a matrix with copy-numbers per bin is then generated.
+
+```{r cnbins}
+ccle<-as.data.frame(cbind(cellid=cells_mapping$cellid[cells_mapping$study=="CCLE"],sample=cells_mapping$fileid[cells_mapping$study=="CCLE"]))
+cells_segcn <- cells_segcn[cells_segcn$sample%in%ccle$sample,]
+cells_segcn <- getCINProfiles(segcn=cells_segcn, samples=unique(cells_segcn$sample))
+cells_segcn <- left_join(cells_segcn,ccle, by="sample")[,c(1:4,6)]
+colnames(cells_segcn)[5]<-"sample"
+
+#get copy-number data per bin
+ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample))
+```
+
+
+For this example, we compare the copy-number profile of **OVKATE** (our sample of interest) with the copy-number profiles of the cell line models. We use [*four similarity metrics*]{.ul}:
+
+-   *Pearson correlation*: An pearson's r value of exactly 1 indicates that the CN profiles of two samples are equal, although it's a measure that tolerates whole ploidy shifts. Rank-base comparisons (kendall or spearman correlation tests) are not recommended to be used for comparing CN profiles because they are sensitive to small variations in the segVal or raw copy-number values of segments (noisy profiles).
+
+-   *Manhattan distance*: A manhattan distance of exactly 0 indicates that the CN profiles of two samples are equal. Contrary to pearson correlation, this measure does not tolerate whole ploidy shifts.
+
+-   *Euclidean distance*: An euclidean distance of exactly 0 indicates that the CN profiles of two samples are equal. As manhattan distance, this distance measure does not tolerate whole ploidy shifts.
+
+-   *Cosine similarity*: A cosine similarity of exactly 1 indicates that the CN profiles of two samples are equal. As Pearson correlation, this measure tolerates whole ploidy shifts.
+
+```{r comparisons, warning=FALSE}
+exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVKATE"])
+colnames(exp_cell)<-"OVKATE"
+
+measures<-getSimilarities(dat1=exp_cell, dat2=ccle_cn, method="all")
+```
+
+Then, we can print the cell line with the most similar copy-number profile (lowest manhattan distance). We used the manhattan distance because it is usually preferred over the more common Euclidean distance when there is high dimensionality in the data. 
+
+The user can also choose to compute the empirical p-value of each comparison by adding the argument `pvalue=TRUE` in the `getSimilarities` function. The empirical p-value represents the probability of obtaining the corresponding similarity value by change. We used the observed values (similarities obtained after comparing all cell lines included in the CNpare dataset) to calculate the empirical p-value. Empirical p-values are calculated by dividing the number of pairwise comparisons with a better similarity value than the computed by the total number of comparisons made. 
+```{r mclosest_cn, echo=FALSE}
+measures<-measures[order(measures$manhattan),]
+head(measures,5)
+```
+```{r plot_top1, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
+exp_cell=cells_segcn[cells_segcn$sample=="OVKATE",]
+mod1_cell=cells_segcn[cells_segcn$sample=="Panc 02.03",]
+CNPlot_events(exp_cell,mod1_cell,method_diff="non-normalized")
+```
+
+Then, we can print the cell line with the most similar copy-number profile regardless the ploidy (highest pearson's r value). Interestingly, in this example, the same cell line comes out as the most representative cell line for OVKATE.
+```{r pclosest_cn, echo=FALSE}
+measures<-measures[order(-measures$r),]
+head(measures,5)
+```
+CNpare allows to visually inspect the uniqueness of the similarity value respect to the observed values in the precomputed dataset by using the `plot_simdensity` function. The argument `method` can be modified to select the similarity metric to explore.
+```{r plot_probability, fig2, fig.height = 4, fig.width = 4, fig.align = "center", eval=TRUE, echo=FALSE}
+plot_simdensity(measures, method="pearson")
+```
+
+##### [Visualization of genome differences between two copy-number profiles]{.ul}
+
+CNpare also provides a visual representation of the genome differences. To this functionality, we changed the the default argument ``plot_dif` to TRUE. Here, we plotted differences in PANC0203 respect to OVKATE:
+```{r plot_differences1, fig3, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
+CNPlot_events(exp_cell,mod1_cell, method_diff = "non-normalized", plot_diff = TRUE)
+```
+
+#### 3) Get the cell line models of the same tissue origin representing the CIN type of interest
+
+##### [Selection of samples with the same tissue origin]{.ul}
+
+We aim at finding the cell line of the same tissue origin that represents the CIN type operating in **OVKATE** (our sample of interest). We have selected this HGSO cancer cell line because it is known to have extreme CIN. Therefore, we selected profiles of all cell lines derived from ovary tissue.
+
+```{r tissue_origin}
+sample="OVKATE"
+cells.tissue<-as.character(na.omit(CCLE_metadata$Cell.line.primary.name[CCLE_metadata$Site.Primary == CCLE_metadata$Site.Primary[CCLE_metadata$Cell.line.primary.name == sample]]))
+tissue_segcn<-cells_segcn[cells_segcn$sample %in% cells.tissue,]
+tissue.profiles<-getProfiles(segcn=tissue_segcn, samples=unique(tissue_segcn$sample))
+```
+
+##### [Quantification of copy-number signatures]{.ul}
+
+Now, we generate a matrix with the activity levels of each copy-number signature per sample. 
+```{r quantify_signs, message=FALSE}
+component_parameters<-readRDS(paste0(path_to_data,"component_parameters.rds"))
+
+CN_features <- extractCopynumberFeatures(tissue.profiles)
+sample_by_component <- generateSampleByComponentMatrix(CN_features, all_components=component_parameters)
+signature_quantification <- quantifySignatures(sample_by_component)
+```
+
+##### [Clustering samples by copy-number signatures]{.ul}
+
+*K-means clustering* (MacQueen, 1967) is the most commonly used unsupervised machine learning algorithm for partitioning a given data set into a set of k groups. Therefore, we will be able to detect similar samples according to copy-number signature exposures.
+
+Since the aim is to match OVKATE with a group of ovarian cell lines with similar signature activities, clustering analyses can be done excluding the input sample and then asking which cluster is the closest to OVKATE. By default, the `getClusterSamples` function includes the input sample for performing the clustering analysis.
+```{r split_signs}
+exp_cell=as.matrix(signature_quantification[,colnames(signature_quantification)=="OVKATE"])
+colnames(exp_cell)<-"OVKATE"
+signature_quantification=signature_quantification[,colnames(signature_quantification)!="OVKATE"]
+```
+
+The `getClusterSamples` function computed the k-means clustering by using cosine similarity and outputs a list of samples included in the closest cluster.. First, the function calculates the optimal number of clusters (k) and then outputs the list of samples clustering with the input sample. In case the input sample is not included in the clustering process, this function asks which cluster is closest to the input sample based on copy number signatures. To this, the cosine similarity between OVKATE and the cluster centers (mean values of the cluster) is computed. 
+
+```{r closest_cluster}
+samples<-getClusterSamples(matrix=signature_quantification, cell=exp_cell)
+print(samples)
+```
+
+
+Then, data is plotted using a scatter plot following the principal component reduction idea. We selected the two signatures with highest variability across clusters to plot data. Only the closest cluster to the input sample is colored.
+```{r plot_clusters, fig4, fig.height = 6, fig.width = 6, fig.align = "center", eval=TRUE, echo=FALSE, message=FALSE}
+m<-cbind(signature_quantification,exp_cell)
+plotClusters(matrix=m, samples=samples)
+```

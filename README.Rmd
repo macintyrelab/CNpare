@@ -65,14 +65,16 @@ The function `getSimilarities()` can be used to get all similarity metrics calcu
 
 Four similarity metrics are computed for comparison by default, but the user can be interested in only computing one of them. It can be done by modifying the `method` parameter as follows:
 
--   Pearson correlation -- `method=pearson`
--   Manhattan distance -- `method=manhattan`
--   Euclidean distance -- `method=euclidean`
--   Cosine similarity -- `method=cosine`
+-   Pearson correlation -- `method="pearson"`
+-   Manhattan distance -- `method="manhattan"`
+-   Euclidean distance -- `method="euclidean"`
+-   Cosine similarity -- `method="cosine"`
+
+The user can choose to compute the empirical p-value of each comparison by adding the argument `pvalue=TRUE`. To calculate the empirical p-value, CNpare uses the distribution of similarities obtained after comparing all samples included in the CNpare dataset. The function `plot_simdensity` can be used to visually inspect the uniqueness of the similarity value respect to the observed values.
 
 ### Compute the % genome differences
 
-Using the function `getDifference()`, the extent of genome differences (%) between two profiles can be calculated
+Using the function `getDifference()`, the extent of genome differences (%) between two profiles can be calculated. This function provides the user the option to calculate the % genome difference normalized by ploidy status by adding the argument `method="normalized"` 
 
 ### Cluster profiles based on their exposure to copy-number signature
 
@@ -90,9 +92,8 @@ Finally, using the function `plotClusters()`, samples are plotted by showing the
 
 ## Manuscript analysis Rmarkdown
 
-The two `Rmarkdown` documents can be compiled to reproduce the entire analysis carried out in the manuscript:
+The `CNpare_DemonstratingUtility` rmarkdown in the `vignettes` folder can be compiled to reproduce a typical workflow of the tool.
 
--   `CNpare_AssessingTool` -- this tutorial reproduces the analyses performed to check the ability of the tool to find the most similar profile
--   `CNpare_DemonstratingUtility` -- this tutorial follows the typical workflow of the tool
+The `Rmarkdown` documents in the `macintyrelab/CNpare_analyses` repository (https://github.com/macintyrelab/CNpare_analyses) can be compiled to reproduce the analyses performed in the manuscript.
 
-To compile this document run knitr to html. Packages required to compile the Rmarkdown document include: knitr, dplyr, ggplot2, reshape2, data.table, flexmix, NMF, stats, splitstackshape, kableExtra and magrittr.
+To compile these documents run knitr to html. Packages required to compile Rmarkdown documents include: knitr, dplyr, ggplot2, reshape2, data.table, flexmix, NMF, stats, splitstackshape, kableExtra and magrittr.

@@ -20,7 +20,7 @@ This function prepare profiles for plotting
 \examples{
 exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
 base=CNpare:::chr_sizes
-base$length <- 1e-6 * base$length #Convert sizes to Mb
-base$offset <- cumsum(base$length) - base$length #Calculate the interval range of each chr
+base$length<-1e-6*base$length #Convert sizes to Mb
+base$offset<-cumsum(base$length)-base$length #Calculate the interval range of each chr
 events<-CNconvert(exp_cell,base)
 }

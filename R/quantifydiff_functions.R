@@ -7,6 +7,7 @@
 #' @description This function unifies boundaries of copy-number segments
 #' @name unifySegments
 #' @importFrom data.table as.data.table setkey foverlaps
+#' @importFrom stats median
 #'
 #' @param posSeg dataframe with segments of the reference sample
 #' @param data dataframe with segments of the experimental model
@@ -36,9 +37,6 @@ unifySegments<-function(posSeg,data){
     cn_out<-data.frame(cn_out,stringsAsFactors = FALSE)
     colnames(cn_out)<-c("chromosome","start","end","segVal","sample","segVal_B")
 
-    #round absolute copy-number
-    cn_out$segVal<-round(cn_out$segVal)
-    cn_out$segVal_B<-round(cn_out$segVal_B)
     #return
     cn_out
 }
@@ -60,7 +58,6 @@ unifySegments<-function(posSeg,data){
 getPloidy<-function(events){
     events$length<-events$end-events$start
     ploidy <- stats::weighted.mean(events$segVal, events$length)
-    ploidy <-round(as.numeric(ploidy))
     return(ploidy)
 }
 
@@ -99,6 +96,10 @@ getDifference<- function(events, events_2, method="non-normalized"){
     #get genome size
     genome_size<-chr_sizes
     genome_size<-sum(genome_size$length)
+
+    #round absolute copy-number
+    unify$segVal<-round(unify$segVal)
+    unify$segVal_B<-round(unify$segVal_B)
 
     diff<-c()
     #Identify similar and different segments

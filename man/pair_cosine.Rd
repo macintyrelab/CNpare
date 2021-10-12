@@ -4,14 +4,16 @@
 \alias{pair_cosine}
 \title{Calculation of cosine similarity}
 \usage{
-pair_cosine(cell, ccle, ccle.name)
+pair_cosine(cell, ccle, ccle.name, pvalue)
 }
 \arguments{
 \item{cell}{vector with bin-level copy number values of one sample}
 
-\item{ccle}{vector with bin-level copy number values of model}
+\item{ccle}{vector with bin-level copy number values of the cell model}
 
-\item{ccle.name}{name of model}
+\item{ccle.name}{name of the cell model}
+
+\item{pvalue}{a logical value to indicate if the empirical pvalue is calculated or not}
 }
 \value{
 Cosine similarity
@@ -20,10 +22,10 @@ Cosine similarity
 This function calculates the Cosine similarity
 }
 \examples{
-posBins <- lapply(seq_len(22),function(chr)
+posBins<-lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 exp_cell<-as.matrix(ccle_cn[,1])
 mod_cell<-as.matrix(ccle_cn[,2])
-c <- pair_cosine(exp_cell, mod_cell,unique(cells_segcn$sample)[2])
+c<-pair_cosine(exp_cell,mod_cell,unique(cells_segcn$sample)[2],pvalue=FALSE)
 }

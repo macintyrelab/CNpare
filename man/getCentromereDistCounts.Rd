@@ -21,7 +21,7 @@ Helper function for extractCopynumberFeatures.
 Approach developed by Geoff Macintyre et al. 2018
 }
 \examples{
-profiles <- getProfiles(segcn=cells_segcn,
+profiles<-getProfiles(segcn=cells_segcn,
     samples=unique(cells_segcn$sample)[1:4])
 gaps<-CNpare:::gaps
 centromeres<-centromeres<-gaps[gaps[,8]=="centromere",]

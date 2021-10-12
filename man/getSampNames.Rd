@@ -17,7 +17,7 @@ Helper function for getting the name of samples.
 Approach developed by Geoff Macintyre et al. 2018
 }
 \examples{
-profiles <- getProfiles(segcn=cells_segcn,
+profiles<-getProfiles(segcn=cells_segcn,
     samples=unique(cells_segcn$sample)[1:4])
 samp.names<-getSampNames(profiles)
 }

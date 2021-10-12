@@ -16,7 +16,7 @@
 #' @return A list with features per sample
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' CN_features<-extractCopynumberFeatures(profiles)
 
@@ -74,10 +74,10 @@ extractCopynumberFeatures<-function(CN_data, cores = 1){
 #' @export
 #' @examples
 #' \dontrun{
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' CN_features<-extractCopynumberFeatures(profiles)
-#' sample_by_component <- generateSampleByComponentMatrix(CN_features,
+#' sample_by_component<-generateSampleByComponentMatrix(CN_features,
 #'     all_components=component_parameters)
 #' signature_quantification <- quantifySignatures(sample_by_component)
 #' }
@@ -108,10 +108,10 @@ quantifySignatures<-function(sample_by_component,component_by_signature=NULL){
 #' @export
 #' @examples
 #' \dontrun{
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles< getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' CN_features<-extractCopynumberFeatures(profiles)
-#' sample_by_component <- generateSampleByComponentMatrix(CN_features,
+#' sample_by_component<-generateSampleByComponentMatrix(CN_features,
 #'     all_components=component_parameters)
 #' }
 
@@ -212,7 +212,7 @@ calculateSumOfPosteriors<-function(CN_feature,components,name, rowIter = 1000, c
 #' @return Matrix with segment sizes per sample
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' segsize<-getSegsize(profiles)
 
@@ -251,7 +251,7 @@ getSegsize<-function(abs_profiles){
 #' @return Matrix with counts of break points per 10Mb per sample
 #' @examples
 #' @export
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' bp10MB<-getBPnum(profiles,CNpare:::chrlen)
 
@@ -295,7 +295,7 @@ getBPnum<-function(abs_profiles,chrlen){
 #' @return Matrix with length of chains of oscilating copy numbers
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' osCN<-getOscilation(profiles,CNpare:::chrlen)
 
@@ -358,7 +358,7 @@ getOscilation<-function(abs_profiles,chrlen){
 #' @return Matrix with breakpoint count per chromosome arm
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' gaps<-CNpare:::gaps
 #' centromeres<-centromeres<-gaps[gaps[,8]=="centromere",]
@@ -422,7 +422,7 @@ getCentromereDistCounts<-function(abs_profiles,centromeres,chrlen){
 #' @return Matrix with difference in copy number between adjacent segments
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' changepoint<-getChangepointCN(profiles)
 
@@ -469,7 +469,7 @@ getChangepointCN<-function(abs_profiles){
 #' @return Matrix with copy numbers
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' copynumber<-getCN(profiles)
 
@@ -506,7 +506,7 @@ getCN<-function(abs_profiles){
 #' @return name of each sample
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' samp.names<-getSampNames(profiles)
 
@@ -533,7 +533,7 @@ getSampNames<-function(abs_profiles){
 #' @return segment table per sample
 #' @export
 #' @examples
-#' profiles <- getProfiles(segcn=cells_segcn,
+#' profiles<-getProfiles(segcn=cells_segcn,
 #'     samples=unique(cells_segcn$sample)[1:4])
 #' segTab<-profiles[[1]]
 

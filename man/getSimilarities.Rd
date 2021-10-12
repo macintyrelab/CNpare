@@ -4,14 +4,16 @@
 \alias{getSimilarities}
 \title{Get similarity metrics}
 \usage{
-getSimilarities(dat1, dat2, method = "all")
+getSimilarities(dat1, dat2, method = "all", pvalue = FALSE)
 }
 \arguments{
 \item{dat1}{matrix with bin-level copy numbers per sample to test}
 
 \item{dat2}{matrix with bin-level copy numbers per model to compare}
 
-\item{method}{method to use for testing similarity. Default is all}
+\item{method}{method to use for testing similarity. Default is \emph{all} methods.}
+
+\item{pvalue}{a logical value to indicate if the empirical pvalue is calculated or not}
 }
 \value{
 dataframe with similarity metrics for all comparisons
@@ -20,10 +22,9 @@ dataframe with similarity metrics for all comparisons
 This function get similarity metrics for comparisons
 }
 \examples{
-posBins <- lapply(seq_len(22),function(chr)
-    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:4])
+posBins<-lapply(seq_len(22),function(chr) getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 exp_cell<-as.matrix(ccle_cn[,1])
 colnames(exp_cell)<-unique(cells_segcn$sample)[1]
-measures <- getSimilarities(dat1=exp_cell,dat2=ccle_cn)
+measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn,method="pearson",pvalue=FALSE)
 }

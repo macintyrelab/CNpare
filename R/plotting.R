@@ -10,10 +10,10 @@
 #'
 #' @param diff dataframe with cell names 'cellid' and genome differences 'percDiff'
 #'
-#' @return A density plot with the distribution. The min and max value is also reported
+#' @return A density plot with the distribution. The min and max value are also reported
 #' @export
 #' @examples
-#' differences <- as.data.frame(cbind(cellid=c(1:5), diff=runif(5, min=0, max=100)))
+#' differences<-as.data.frame(cbind(cellid=c(1:5), diff=runif(5, min=0, max=100)))
 #' plot_diffdensity(differences)
 
 plot_diffdensity<-function(diff){
@@ -29,6 +29,66 @@ plot_diffdensity<-function(diff){
         theme_minimal()
 }
 
+#' @title Density plot showing the distribution of similarities
+#' @description This function draws similarity values across all comparisons.
+#' Then, the best value obtained for the sample of interest is plotted to see how
+#' probable is to get this similarity value
+#'
+#' @name plot_simdensity
+#' @import ggplot2
+#' @importFrom tibble tibble
+#'
+#' @param measures dataframe with similarity metrics of comparisons between the sample
+#' of interest and the rest of cell lines included in the dataset
+#' @param method similarity metric to use for plotting. Options are *pearson*, *manhattan*,
+#' *euclidean*, and *cosine*
+#'
+#' @return A density plot with the distribution of similarities including the best similarity
+#' value obtained for the sample of interest. The min and max values are also reported
+#' @export
+#' @examples
+#' \dontrun{
+#' posBins<-lapply(seq_len(22),function(chr) getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
+#' exp_cell<-as.matrix(ccle_cn[,1])
+#' colnames(exp_cell)<-unique(cells_segcn$sample)[1]
+#' measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn)
+#' plot_simdensity(measures,method="pearson")
+#' }
+
+plot_simdensity<-function(measures,method){
+    if(method=="pearson"){
+        measures<-measures[order(-measures$r),]
+        m=tibble(x = measures[2,3], y = 0)
+        data=as.data.frame(all_pearson)
+    }
+    else if(method=="manhattan"){
+        measures<-measures[order(measures$manhattan),]
+        m=tibble(x = measures[2,5], y = 0)
+        data=as.data.frame(all_manhattan)
+    }
+    else if(method=="euclidean"){
+        measures<-measures[order(measures$euclidean),]
+        m=tibble(x = measures[2,7], y = 0)
+        data=as.data.frame(all_euclidean)
+    }
+    else if(method=="cosine"){
+        measures<-measures[order(measures$cos_sim),]
+        m=tibble(x = measures[2,9], y = 0)
+        data=as.data.frame(all_cosine)
+    }
+
+    ggplot(data, aes(x=as.numeric(data[,1])))+
+        geom_density(fill='firebrick4', alpha=0.4)+
+        labs(title=paste0("Distribution of ", method," similarities"),
+             subtitle=(paste0(method, " similarity = ", round(m[1,1],2),
+                              " (range from ", round(min(as.numeric(data[,1])), 2),
+                              " to ", round(max(as.numeric(data[,1])), 2),")")),
+             x="",
+             y="Frequency")+
+        theme_minimal()+
+        geom_point(data=m, aes(x,y))
+}
 
 #' @title Visualization of two copy-number profiles
 #' @description This function draws two copy-number profiles for visual comparison
@@ -76,6 +136,10 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
     } else {
         #get unified profiles
         unify<-unifySegments(events, events_2)
+        #round absolute copy-number
+        unify$segVal<-round(unify$segVal)
+        unify$segVal_B<-round(unify$segVal_B)
+        #get unify segments
         s<-unique(events_2$sample)
         events<-unify[,c(seq_len(5))]
         events_2<-unify[,c(seq_len(3),6,5)]
@@ -132,8 +196,8 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
 #' @examples
 #' exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]
 #' base=CNpare:::chr_sizes
-#' base$length <- 1e-6 * base$length #Convert sizes to Mb
-#' base$offset <- cumsum(base$length) - base$length #Calculate the interval range of each chr
+#' base$length<-1e-6*base$length #Convert sizes to Mb
+#' base$offset<-cumsum(base$length)-base$length #Calculate the interval range of each chr
 #' events<-CNconvert(exp_cell,base)
 
 CNconvert <- function(e,base){
@@ -164,7 +228,7 @@ CNconvert <- function(e,base){
 #' @return A plot with samples clustered by similarity in signature exposition
 #' @export
 #' @examples
-#' matrix <- cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
+#' matrix<-cbind(s1=runif(10, min=0, max=1), s2=runif(10, min=0, max=1),
 #'     s3=runif(10, min=0, max=1))
 #' rownames(matrix)<-paste0("c", seq(1,10))
 #' cell<-matrix(runif(n = 3, min = 0, max = 1))
