@@ -28,7 +28,7 @@ pair_pearson<-function(cell, ccle, ccle.name, pvalue){
     cor<-as.data.frame(cbind(id=ccle.name, r=r))
 
     if(pvalue==TRUE){
-        ind<-Position(function(x) x < cor, all_pearson)-1
+        ind<-Position(function(x) x < r, all_pearson)-1
         cor<-as.data.frame(cbind(id=ccle.name, r=r,r.pval=ind/length(all_pearson)))
     }
     rownames(cor) <- NULL
