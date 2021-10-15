@@ -4,16 +4,15 @@
 \alias{getCNbins.sample}
 \title{Get copy-number per bins in a sample}
 \usage{
-getCNbins.sample(posBins, data)
+getCNbins.sample(s, cn)
 }
 \arguments{
-\item{posBins}{list with genomic positions of bins. Each list contains
-data from each chromosome. Obtained from getBinsStartsEnds}
+\item{s}{sample name}
 
-\item{data}{segment table of copy numbers of one sample}
+\item{cn}{matrix with copy numbers in a bin (row) in samples (columns)}
 }
 \value{
-bin table of copy numbers of one sample
+a vector with copy numbers of samples in one bin
 }
 \description{
 This is a helper function for transforming segment tables to bin tables
@@ -21,6 +20,12 @@ This is a helper function for transforming segment tables to bin tables
 \examples{
 posBins <- lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-cell_bin <- getCNbins.sample(posBins=posBins,
-    data=cells_segcn[cells_segcn$sample=="22RV1",])
+pb=data.table::rbindlist(posBins)[1:20]
+samp=unique(cells_segcn$sample)[1:2]
+data=cells_segcn[cells_segcn$sample\%in\%samp,]
+chrom<-as.character(pb[2,1])
+start<-as.numeric(pb[2,2])
+end<-as.numeric(pb[2,3])
+cn<-data[(data$chromosome\%in\%chrom & data$start<=start & data$end>=end),]
+cell_bin <- getCNbins.sample(s=samp[1],cn)
 }

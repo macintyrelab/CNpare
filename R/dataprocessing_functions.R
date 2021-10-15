@@ -64,15 +64,14 @@ getCINProfiles <- function(segcn,samples){
 #' @examples
 #' posBins <- lapply(seq_len(22),function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-#' cell_bin <- getCNbins(posBins=posBins,
-#'     data=cells_segcn[cells_segcn$sample=="22RV1",],
-#'     samples="22RV1")
+#' cells_bin <- getCNbins(posBins=posBins,
+#'     data=cells_segcn[cells_segcn$sample=="22RV1",], samples="22RV1")
 
 getCNbins<- function(posBins,data,samples){
+    pb=data.table::rbindlist(posBins)
     out<-list()
-    out<-lapply(samples, function(s) getCNbins.sample(posBins,
-                                                      data=data[data$sample==s,]))
-    cn<-as.matrix(do.call(cbind,out))
+    out<-lapply(seq_len(nrow(pb)), function(b) getCNbins.bin(b,pb,data,samples))
+    cn<-as.matrix(do.call(rbind,out))
     colnames(cn)<-samples
     return(cn)
 }
@@ -83,24 +82,31 @@ getCNbins<- function(posBins,data,samples){
 #' @description This is a helper function for transforming segment tables to bin tables
 #' @name getCNbins.sample
 #'
-#' @param posBins list with genomic positions of bins. Each list contains
-#' data from each chromosome. Obtained from getBinsStartsEnds
-#' @param data segment table of copy numbers of one sample
+#' @param s sample name
+#' @param cn matrix with copy numbers in a bin (row) in samples (columns)
 #'
-#' @return bin table of copy numbers of one sample
+#' @return a vector with copy numbers of samples in one bin
 #' @export
 #' @examples
 #' posBins <- lapply(seq_len(22),function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-#' cell_bin <- getCNbins.sample(posBins=posBins,
-#'     data=cells_segcn[cells_segcn$sample=="22RV1",])
+#' pb=data.table::rbindlist(posBins)[1:20]
+#' samp=unique(cells_segcn$sample)[1:2]
+#' data=cells_segcn[cells_segcn$sample%in%samp,]
+#' chrom<-as.character(pb[2,1])
+#' start<-as.numeric(pb[2,2])
+#' end<-as.numeric(pb[2,3])
+#' cn<-data[(data$chromosome%in%chrom & data$start<=start & data$end>=end),]
+#' cell_bin <- getCNbins.sample(s=samp[1],cn)
 
-getCNbins.sample <- function(posBins,data){
-    pb=data.table::rbindlist(posBins)
-    out<-list()
-    out<-lapply(seq_len(nrow(pb)), function(b) getCNbins.bin(b,pb,data))
-    cn<-do.call(rbind,out)
-    return(cn)
+getCNbins.sample <- function(s,cn){
+    if (nrow(cn)!=0){
+        segVal <- cn[cn$sample==s, "segVal"]
+        segVal <- ifelse(length(segVal)!=0, segVal, NA)
+    } else {
+        segVal <- NA
+    }
+    return(segVal)
 }
 
 #' @title Get copy-number in a bin
@@ -109,24 +115,30 @@ getCNbins.sample <- function(posBins,data){
 #'
 #' @param b bin number
 #' @param pb matrix with genomic positions of bins
-#' @param data segment table of copy numbers of one sample
+#' @param data segment table of copy numbers of one bin
+#' @param samples vector with sample names
 #'
 #' @return a list of copy-number values per bin
 #' @export
 #' @examples
 #' posBins <- lapply(seq_len(22),function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-#' cell_bin <- getCNbins.bin(b=1,pb=data.table::rbindlist(posBins),
-#'     data=cells_segcn[cells_segcn$sample=="22RV1",])
+#' samples=unique(cells_segcn$sample)[1:2]
+#' data=cells_segcn[cells_segcn$sample%in%samples,]
+#' cn_bin <- getCNbins.bin(b=2,pb=data.table::rbindlist(posBins)[1:20],data,samples)
 
-getCNbins.bin <- function(b,pb,data){
-    chrom <- as.character(pb[b,1])
-    start <- as.numeric(pb[b,2])
-    end   <- as.numeric(pb[b,3])
-    cn <- data[(data$chromosome%in%chrom & data$start<=start & data$end>=end),"segVal"]
-    cn <- ifelse(length(cn)!=0,cn,NA)
-    return(cn)
+getCNbins.bin <- function(b,pb,data,samples){
+    out<-list()
+    chrom<-as.character(pb[b,1])
+    start<-as.numeric(pb[b,2])
+    end<-as.numeric(pb[b,3])
+    cn<-data[(data$chromosome%in%chrom & data$start<=start & data$end>=end),]
+    out<-lapply(samples, function(s) getCNbins.sample(s,cn))
+    out<-do.call(cbind,out)
+    colnames(out)<-samples
+    return(out)
 }
+
 
 #' @title Add profiles in a list
 #' @description This function includes all profiles in a list

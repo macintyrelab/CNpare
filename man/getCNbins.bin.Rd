@@ -4,14 +4,16 @@
 \alias{getCNbins.bin}
 \title{Get copy-number in a bin}
 \usage{
-getCNbins.bin(b, pb, data)
+getCNbins.bin(b, pb, data, samples)
 }
 \arguments{
 \item{b}{bin number}
 
 \item{pb}{matrix with genomic positions of bins}
 
-\item{data}{segment table of copy numbers of one sample}
+\item{data}{segment table of copy numbers of one bin}
+
+\item{samples}{vector with sample names}
 }
 \value{
 a list of copy-number values per bin
@@ -22,6 +24,7 @@ This is a helper function for transforming segment tables to bin tables
 \examples{
 posBins <- lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-cell_bin <- getCNbins.bin(b=1,pb=data.table::rbindlist(posBins),
-    data=cells_segcn[cells_segcn$sample=="22RV1",])
+samples=unique(cells_segcn$sample)[1:2]
+data=cells_segcn[cells_segcn$sample\%in\%samples,]
+cn_bin <- getCNbins.bin(b=2,pb=data.table::rbindlist(posBins)[1:20],data,samples)
 }
