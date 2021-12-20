@@ -42,9 +42,9 @@ Then, we selected cell lines of the same tissue origin, quantified the copy-numb
 
 We first get the **RData** files in the `data/` folder:
 
--   `cells_segcn.RData` -- Absolute copy-number profiles of cancer cell lines generated with *ASCAT*. The segment tables should have the following column headers: "chromosome", "start", "end", "segVal", "sample".
--   `cells_mapping.RData` Mapping information of cancer cell lines
--   `CCLE_metadata.RData` Metadata of CCLE database for selecting cell lines by tissue origin
+-   `cells_segcn.RData` -- Absolute copy-number profiles of cancer cell lines generated with *ASCAT.sc*. The raw file can be found in the following github repository: `VanLoo-lab/ASCAT.sc`. The segment tables should have the following column headers: "chromosome", "start", "end", "segVal", "sample".
+-   `cells_mapping.RData` -- Mapping information of cancer cell lines
+-   `CCLE_metadata.RData` -- Metadata of CCLE database for selecting cell lines by tissue origin
 
 ```{r input, include=FALSE}
 cells_segcn<-cells_segcn

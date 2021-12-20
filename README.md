@@ -53,11 +53,15 @@ the following arguments:
 -   `data` – segmented copy number
 -   `samples` – vector with the name of samples
 
+### Package data
+
 This package includes `cells_segcn.RData`, a dataframe with copy-number
 profiles of 1,417 human cancer cell lines from the Cancer Cell Line
 Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in cancer (GDSC),
-which has been generated with ASCAT. This dataset must also be
-transformed to bin-level copy numbers before to be used for comparisons.
+which has been generated with *ASCAT.sc*. The original file can be found
+in the following github repository: `VanLoo-lab/ASCAT.sc`. This dataset
+must also be transformed to bin-level copy numbers before to be used for
+comparisons.
 
 ### Compare two copy-number profiles
 
@@ -104,7 +108,7 @@ except for `component_parameters.rds` which may be downloaded from here:
 preparing an experiment data package for including all data needed for
 identifying copy-number signatures
 
-The `getClusterSamples` function can be used to get names of samples
+The `getClusterSamples()` function can be used to get names of samples
 included in the same (`include=TRUE`, default) or closest
 (`include=FALSE`) cluster to the sample of interest according to the
 exposure to each copy number signature. This function automatically
@@ -117,8 +121,8 @@ means. Clusters are also represented.
 
 ## Manuscript analysis Rmarkdown
 
-The `CNpare_DemonstratingUtility` rmarkdown in the `vignettes` folder
-can be compiled to reproduce a typical workflow of the tool.
+The `CNpare_Workflow` rmarkdown in the `/vignettes` folder can be
+compiled to reproduce a typical workflow of the tool.
 
 The `Rmarkdown` documents in the `macintyrelab/CNpare_analyses`
 repository (<https://github.com/macintyrelab/CNpare_analyses>) can be
@@ -126,5 +130,5 @@ compiled to reproduce the analyses performed in the manuscript.
 
 To compile these documents run knitr to html. Packages required to
 compile Rmarkdown documents include: knitr, dplyr, ggplot2, reshape2,
-data.table, flexmix, NMF, stats, splitstackshape, kableExtra and
-magrittr.
+data.table, flexmix, NMF, stats, splitstackshape, kableExtra, qusage,
+string and magrittr.
