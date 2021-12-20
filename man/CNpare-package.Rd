@@ -6,14 +6,7 @@
 \alias{CNpare-package}
 \title{CNpare: Comparing tumour copy number profiles}
 \description{
-CNpare is designed to compare and contrast genome-wide tumour copy 
-    number profiles. This package can be used to: 1) calculate similarities 
-    between copy-number profiles, 2) quantify the extent of genome differences 
-    between copy-number profiles, and 3) compare profiles based on copy-number 
-    signatures. The most basic initial input to the CNpare package consists of 
-    a data frame containing the segmented copy number profile from a tumor 
-    sample, which can be compared to the cells_segcn.RData included in this
-    package in order to find the most representative model system.
+CNpare is designed to compare and contrast genome-wide tumour copy number profiles. This package can be used to: 1) calculate similarities between copy-number profiles, 2) quantify the extent of genome differences between copy-number profiles, and 3) compare profiles based on copy-number signatures. The most basic initial input to the CNpare package consists of a data frame containing the segmented copy number profile from a tumor sample, which can be compared to the cells_segcn.RData included in this package in order to find the most representative model system.
 }
 \author{
 \strong{Maintainer}: Barbara Hernando \email{b.hernfust@gmail.es}
