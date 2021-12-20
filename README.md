@@ -58,10 +58,10 @@ the following arguments:
 This package includes `cells_segcn.RData`, a dataframe with copy-number
 profiles of 1,417 human cancer cell lines from the Cancer Cell Line
 Encyclopaedia (CCLE) and Genomics of Drug Sensitivity in cancer (GDSC),
-which has been generated with *ASCAT.sc*. The original file can be found
-in the following github repository: `VanLoo-lab/ASCAT.sc`. This dataset
-must also be transformed to bin-level copy numbers before to be used for
-comparisons.
+which has been generated with `ASCAT.sc`. The original file can be found
+in the following github repository: `VanLoo-lab/ASCAT.sc`
+(<https://github.com/VanLoo-lab/ASCAT.sc>). This dataset must also be
+transformed to bin-level copy numbers before to be used for comparisons.
 
 ### Compare two copy-number profiles
 
