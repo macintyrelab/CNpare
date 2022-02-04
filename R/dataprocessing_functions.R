@@ -23,7 +23,7 @@ getBinsStartsEnds <- function(window=500000,chr,lengthChr){
     starts <- divideChr[-c(length(divideChr))] + 1
     ends <- divideChr[-c(1)]
 
-    binsSe <- list(chromosome=chr,start=starts,end=ends)
+    binsSe <- list(chromosome=as.character(chr),start=starts,end=ends)
     binsSe
 }
 
@@ -70,8 +70,8 @@ getCINProfiles <- function(segcn,samples){
 getCNbins<- function(posBins,data,samples){
     pb=data.table::rbindlist(posBins)
     data<-data.table::as.data.table(data[,c(5,4,1:3)])
-    data.table::setkey(pb, chromosome, start, end)
-    overlap <- as.data.frame(data.table::foverlaps(data,pb))
+    data.table::setkey(pb,chromosome,start,end)
+    overlap<-as.data.frame(data.table::foverlaps(data,pb))
     out<-list()
     out<-lapply(seq_len(nrow(pb)), function(b) getCNbins.bin(b,pb,overlap,samples))
     cn<-as.matrix(do.call(rbind,out))
@@ -84,6 +84,7 @@ getCNbins<- function(posBins,data,samples){
 #' @title Get copy-number per bins in a sample
 #' @description This is a helper function for transforming segment tables to bin tables
 #' @name getCNbins.sample
+#' @importFrom stats na.omit
 #'
 #' @param s sample name
 #' @param cn matrix with copy numbers in a bin (row) in samples (columns)
@@ -95,7 +96,7 @@ getCNbins<- function(posBins,data,samples){
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' pb=data.table::rbindlist(posBins)[1:20]
 #' samp=unique(cells_segcn$sample)[1:2]
-#' data=data.table::as.data.table(cells_segcn[cells_segcn$sample%in%samples,c(5,4,1:3)])
+#' data=data.table::as.data.table(cells_segcn[cells_segcn$sample%in%samp,c(5,4,1:3)])
 #' data.table::setkey(pb, chromosome, start, end)
 #' overlap=as.data.frame(data.table::foverlaps(data,pb))
 #' cn=overlap[(overlap$chromosome=="1" & overlap$start==1 & overlap$end==500000),]

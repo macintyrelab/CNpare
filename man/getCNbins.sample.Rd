@@ -22,10 +22,9 @@ posBins <- lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 pb=data.table::rbindlist(posBins)[1:20]
 samp=unique(cells_segcn$sample)[1:2]
-data=cells_segcn[cells_segcn$sample\%in\%samp,]
-chrom<-as.character(pb[2,1])
-start<-as.numeric(pb[2,2])
-end<-as.numeric(pb[2,3])
-cn<-data[(data$chromosome\%in\%chrom & data$start<=start & data$end>=end),]
-cell_bin <- getCNbins.sample(s=samp[1],cn)
+data=data.table::as.data.table(cells_segcn[cells_segcn$sample\%in\%samp,c(5,4,1:3)])
+data.table::setkey(pb, chromosome, start, end)
+overlap=as.data.frame(data.table::foverlaps(data,pb))
+cn=overlap[(overlap$chromosome=="1" & overlap$start==1 & overlap$end==500000),]
+cell_bin=getCNbins.sample(s=samp[1],cn)
 }

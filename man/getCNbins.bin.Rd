@@ -4,14 +4,14 @@
 \alias{getCNbins.bin}
 \title{Get copy-number in a bin}
 \usage{
-getCNbins.bin(b, pb, data, samples)
+getCNbins.bin(b, pb, overlap, samples)
 }
 \arguments{
 \item{b}{bin number}
 
 \item{pb}{matrix with genomic positions of bins}
 
-\item{data}{segment table of copy numbers of one bin}
+\item{overlap}{table with overlaps between bin and segment table}
 
 \item{samples}{vector with sample names}
 }
@@ -24,7 +24,10 @@ This is a helper function for transforming segment tables to bin tables
 \examples{
 posBins <- lapply(seq_len(22),function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+pb=data.table::rbindlist(posBins)[1:20]
 samples=unique(cells_segcn$sample)[1:2]
-data=cells_segcn[cells_segcn$sample\%in\%samples,]
-cn_bin <- getCNbins.bin(b=2,pb=data.table::rbindlist(posBins)[1:20],data,samples)
+data=data.table::as.data.table(cells_segcn[cells_segcn$sample\%in\%samples,c(5,4,1:3)])
+data.table::setkey(pb, chromosome, start, end)
+overlap <- as.data.frame(data.table::foverlaps(data,pb))
+cn_bin <- getCNbins.bin(b=2,pb,overlap,samples)
 }
