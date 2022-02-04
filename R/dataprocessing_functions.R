@@ -105,6 +105,7 @@ getCNbins<- function(posBins,data,samples){
 
 getCNbins.sample <- function(s,cn){
     segVal <- as.numeric(mean(na.omit(cn[cn$sample==s,"segVal"])))
+    segVal[is.nan(segVal)] <- NA
     return(segVal)
 }
 
