@@ -20,7 +20,7 @@ dataframe with similarity metrics for all comparisons
 This function get the top hit for each comparison per sample
 }
 \examples{
-posBins<-lapply(seq_len(22),function(chr)
+posBins<-lapply(1,function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 exp_cell<-as.matrix(ccle_cn[,1])

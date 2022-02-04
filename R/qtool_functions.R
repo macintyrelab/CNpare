@@ -15,7 +15,7 @@
 #' @return Pearson's r
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
@@ -48,7 +48,7 @@ pair_pearson<-function(cell, ccle, ccle.name, pvalue){
 #' @return Manhattan distance
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
@@ -80,7 +80,7 @@ pair_manhattan<-function(cell, ccle, ccle.name, pvalue){
 #' @return Euclidean distance
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
@@ -111,7 +111,7 @@ pair_euclidean<-function(cell, ccle, ccle.name, pvalue){
 #' @return Cosine similarity
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
@@ -144,7 +144,7 @@ pair_cosine<-function(cell, ccle, ccle.name, pvalue){
 #' @return dataframe with similarity metrics for all comparisons
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr) getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' posBins<-lapply(1,function(chr) getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
 #' colnames(exp_cell)<-unique(cells_segcn$sample)[1]
@@ -173,7 +173,7 @@ getSimilarities<-function(dat1, dat2, method="all", pvalue=FALSE){
 #' @return dataframe with similarity metrics for all comparisons of the sample
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins,data=cells_segcn,samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
@@ -271,7 +271,7 @@ getSimilarities.sample<-function(s, dat1, dat2, method, pvalue){
 #' @return dataframe with similarity metrics for all comparisons
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 #' exp_cell<-as.matrix(ccle_cn[,1])
@@ -352,7 +352,7 @@ getTopHit<-function(samples, measure, method="all"){
 #' @return matrix with copy numbers of all samples
 #' @export
 #' @examples
-#' posBins<-lapply(seq_len(22),function(chr)
+#' posBins<-lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' exp_cell<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1])
 #' colnames(exp_cell)<-unique(cells_segcn$sample)[1]

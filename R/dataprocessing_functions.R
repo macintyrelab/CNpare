@@ -62,7 +62,7 @@ getCINProfiles <- function(segcn,samples){
 #' @return bin table of copy numbers of all samples
 #' @export
 #' @examples
-#' posBins <- lapply(seq_len(22),function(chr)
+#' posBins <- lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' cells_bin <- getCNbins(posBins=posBins,
 #'     data=cells_segcn[cells_segcn$sample=="22RV1",], samples="22RV1")
@@ -92,11 +92,12 @@ getCNbins<- function(posBins,data,samples){
 #' @return a vector with copy numbers of samples in one bin
 #' @export
 #' @examples
-#' posBins <- lapply(seq_len(22),function(chr)
+#' posBins <- lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-#' pb=data.table::rbindlist(posBins)[1:10]
+#' pb=data.table::rbindlist(posBins)
 #' samp=unique(cells_segcn$sample)[1]
-#' data=data.table::as.data.table(cells_segcn[cells_segcn$sample%in%samp,c(5,4,1:3)])
+#' data=cells_segcn[cells_segcn$sample==samp,]
+#' data<-data.table::as.data.table(data[,c(5,4,1:3)])
 #' data.table::setkey(pb, chromosome, start, end)
 #' overlap=as.data.frame(data.table::foverlaps(data,pb))
 #' cn=overlap[(overlap$chromosome=="1" & overlap$start==1 & overlap$end==500000),]
@@ -119,13 +120,14 @@ getCNbins.sample <- function(s,cn){
 #' @return a list of copy-number values per bin
 #' @export
 #' @examples
-#' posBins <- lapply(seq_len(22),function(chr)
+#' posBins <- lapply(1,function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-#' pb=data.table::rbindlist(posBins)[1:10]
+#' pb=data.table::rbindlist(posBins)
 #' samp=unique(cells_segcn$sample)[1]
-#' data=data.table::as.data.table(cells_segcn[cells_segcn$sample%in%samp,c(5,4,1:3)])
+#' data=cells_segcn[cells_segcn$sample==samp,]
+#' data<-data.table::as.data.table(data[,c(5,4,1:3)])
 #' data.table::setkey(pb, chromosome, start, end)
-#' overlap <- as.data.frame(data.table::foverlaps(data,pb))
+#' overlap=as.data.frame(data.table::foverlaps(data,pb))
 #' cn_bin <- getCNbins.bin(b=2,pb,overlap,samples=samp)
 
 getCNbins.bin <- function(b,pb,overlap,samples){

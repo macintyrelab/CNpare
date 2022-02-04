@@ -18,13 +18,14 @@ a vector with copy numbers of samples in one bin
 This is a helper function for transforming segment tables to bin tables
 }
 \examples{
-posBins <- lapply(seq_len(22),function(chr)
+posBins <- lapply(1,function(chr)
     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
-pb=data.table::rbindlist(posBins)[1:20]
-samp=unique(cells_segcn$sample)[1:2]
-data=data.table::as.data.table(cells_segcn[cells_segcn$sample\%in\%samp,c(5,4,1:3)])
+pb=data.table::rbindlist(posBins)
+samp=unique(cells_segcn$sample)[1]
+data=cells_segcn[cells_segcn$sample==samp,]
+data<-data.table::as.data.table(data[,c(5,4,1:3)])
 data.table::setkey(pb, chromosome, start, end)
 overlap=as.data.frame(data.table::foverlaps(data,pb))
 cn=overlap[(overlap$chromosome=="1" & overlap$start==1 & overlap$end==500000),]
-cell_bin=getCNbins.sample(s=samp[1],cn)
+cell_bin=getCNbins.sample(s=samp,cn)
 }
