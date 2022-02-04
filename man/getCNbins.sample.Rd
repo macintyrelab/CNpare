@@ -19,7 +19,7 @@ This is a helper function for transforming segment tables to bin tables
 }
 \examples{
 posBins <- lapply(1,function(chr)
-    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+    getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 pb=data.table::rbindlist(posBins)
 samp=unique(cells_segcn$sample)[1]
 data=cells_segcn[cells_segcn$sample==samp,]

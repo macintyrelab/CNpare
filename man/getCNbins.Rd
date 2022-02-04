@@ -22,7 +22,7 @@ This function transform segment tables to bin tables
 }
 \examples{
 posBins <- lapply(1,function(chr)
-    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+    getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 cells_bin <- getCNbins(posBins=posBins,
     data=cells_segcn[cells_segcn$sample=="22RV1",], samples="22RV1")
 }

@@ -21,7 +21,7 @@ This function get the top hit for each comparison per sample
 }
 \examples{
 posBins<-lapply(1,function(chr)
-    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+    getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 ccle_cn<-getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_segcn$sample)[1:2])
 exp_cell<-as.matrix(ccle_cn[,1])
 colnames(exp_cell)<-unique(cells_segcn$sample)[1]

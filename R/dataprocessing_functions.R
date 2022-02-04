@@ -63,7 +63,7 @@ getCINProfiles <- function(segcn,samples){
 #' @export
 #' @examples
 #' posBins <- lapply(1,function(chr)
-#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#'     getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 #' cells_bin <- getCNbins(posBins=posBins,
 #'     data=cells_segcn[cells_segcn$sample=="22RV1",], samples="22RV1")
 
@@ -84,7 +84,6 @@ getCNbins<- function(posBins,data,samples){
 #' @title Get copy-number per bins in a sample
 #' @description This is a helper function for transforming segment tables to bin tables
 #' @name getCNbins.sample
-#' @importFrom stats na.omit
 #'
 #' @param s sample name
 #' @param cn matrix with copy numbers in a bin (row) in samples (columns)
@@ -93,7 +92,7 @@ getCNbins<- function(posBins,data,samples){
 #' @export
 #' @examples
 #' posBins <- lapply(1,function(chr)
-#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#'     getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 #' pb=data.table::rbindlist(posBins)
 #' samp=unique(cells_segcn$sample)[1]
 #' data=cells_segcn[cells_segcn$sample==samp,]
@@ -104,7 +103,7 @@ getCNbins<- function(posBins,data,samples){
 #' cell_bin=getCNbins.sample(s=samp,cn)
 
 getCNbins.sample <- function(s,cn){
-    segVal <- as.numeric(mean(na.omit(cn[cn$sample==s,"segVal"])))
+    segVal <- as.numeric(mean(cn[cn$sample==s,"segVal"], na.rm=TRUE))
     segVal[is.nan(segVal)] <- NA
     return(segVal)
 }
@@ -122,7 +121,7 @@ getCNbins.sample <- function(s,cn){
 #' @export
 #' @examples
 #' posBins <- lapply(1,function(chr)
-#'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#'     getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 #' pb=data.table::rbindlist(posBins)
 #' samp=unique(cells_segcn$sample)[1]
 #' data=cells_segcn[cells_segcn$sample==samp,]
