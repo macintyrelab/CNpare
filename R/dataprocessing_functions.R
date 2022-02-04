@@ -23,7 +23,7 @@ getBinsStartsEnds <- function(window=500000,chr,lengthChr){
     starts <- divideChr[-c(length(divideChr))] + 1
     ends <- divideChr[-c(1)]
 
-    binsSe <- list(chromosome=chr,starts=starts,ends=ends)
+    binsSe <- list(chromosome=chr,start=starts,end=ends)
     binsSe
 }
 
@@ -69,8 +69,11 @@ getCINProfiles <- function(segcn,samples){
 
 getCNbins<- function(posBins,data,samples){
     pb=data.table::rbindlist(posBins)
+    data<-data.table::as.data.table(data[,c(5,4,1:3)])
+    data.table::setkey(pb, chromosome, start, end)
+    overlap <- as.data.frame(data.table::foverlaps(data,pb))
     out<-list()
-    out<-lapply(seq_len(nrow(pb)), function(b) getCNbins.bin(b,pb,data,samples))
+    out<-lapply(seq_len(nrow(pb)), function(b) getCNbins.bin(b,pb,overlap,samples))
     cn<-as.matrix(do.call(rbind,out))
     colnames(cn)<-samples
     return(cn)
@@ -92,20 +95,14 @@ getCNbins<- function(posBins,data,samples){
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
 #' pb=data.table::rbindlist(posBins)[1:20]
 #' samp=unique(cells_segcn$sample)[1:2]
-#' data=cells_segcn[cells_segcn$sample%in%samp,]
-#' chrom<-as.character(pb[2,1])
-#' start<-as.numeric(pb[2,2])
-#' end<-as.numeric(pb[2,3])
-#' cn<-data[(data$chromosome%in%chrom & data$start<=start & data$end>=end),]
-#' cell_bin <- getCNbins.sample(s=samp[1],cn)
+#' data=data.table::as.data.table(cells_segcn[cells_segcn$sample%in%samples,c(5,4,1:3)])
+#' data.table::setkey(pb, chromosome, start, end)
+#' overlap=as.data.frame(data.table::foverlaps(data,pb))
+#' cn=overlap[(overlap$chromosome=="1" & overlap$start==1 & overlap$end==500000),]
+#' cell_bin=getCNbins.sample(s=samp[1],cn)
 
 getCNbins.sample <- function(s,cn){
-    if (nrow(cn)!=0){
-        segVal <- cn[cn$sample==s, "segVal"]
-        segVal <- ifelse(length(segVal)!=0, segVal, NA)
-    } else {
-        segVal <- NA
-    }
+    segVal <- as.numeric(mean(na.omit(cn[cn$sample==s,"segVal"])))
     return(segVal)
 }
 
@@ -115,7 +112,7 @@ getCNbins.sample <- function(s,cn){
 #'
 #' @param b bin number
 #' @param pb matrix with genomic positions of bins
-#' @param data segment table of copy numbers of one bin
+#' @param overlap table with overlaps between bin and segment table
 #' @param samples vector with sample names
 #'
 #' @return a list of copy-number values per bin
@@ -123,16 +120,19 @@ getCNbins.sample <- function(s,cn){
 #' @examples
 #' posBins <- lapply(seq_len(22),function(chr)
 #'     getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+#' pb=data.table::rbindlist(posBins)[1:20]
 #' samples=unique(cells_segcn$sample)[1:2]
-#' data=cells_segcn[cells_segcn$sample%in%samples,]
-#' cn_bin <- getCNbins.bin(b=2,pb=data.table::rbindlist(posBins)[1:20],data,samples)
+#' data=data.table::as.data.table(cells_segcn[cells_segcn$sample%in%samples,c(5,4,1:3)])
+#' data.table::setkey(pb, chromosome, start, end)
+#' overlap <- as.data.frame(data.table::foverlaps(data,pb))
+#' cn_bin <- getCNbins.bin(b=2,pb,overlap,samples)
 
-getCNbins.bin <- function(b,pb,data,samples){
+getCNbins.bin <- function(b,pb,overlap,samples){
     out<-list()
     chrom<-as.character(pb[b,1])
     start<-as.numeric(pb[b,2])
     end<-as.numeric(pb[b,3])
-    cn<-data[(data$chromosome%in%chrom & data$start<=start & data$end>=end),]
+    cn<-overlap[(overlap$chromosome%in%chrom & overlap$start==start & overlap$end==end),]
     out<-lapply(samples, function(s) getCNbins.sample(s,cn))
     out<-do.call(cbind,out)
     colnames(out)<-samples
