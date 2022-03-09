@@ -334,7 +334,7 @@ getTopHit<-function(samples, measure, method="all"){
     else if (method=="manhattan"){
         return(manhattan)
     }
-    else if (method=="cosine"){
+    else if (method=="euclidean"){
         return(euclidean)
     }
     else if (method=="cosine"){
