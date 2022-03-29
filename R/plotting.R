@@ -140,7 +140,7 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
         unify$segVal<-round(unify$segVal)
         unify$segVal_B<-round(unify$segVal_B)
         #get unify segments
-        s<-unique(events_2$sample)
+        s<-unique(events$sample)
         events<-unify[,c(seq_len(5))]
         events_2<-unify[,c(seq_len(3),6,5)]
         colnames(events_2)[4]<-"segVal"
@@ -157,7 +157,7 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
             cex.lab=1.1,cex.main=1.5, font.lab=2, outer=FALSE,
-            sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",s," profile"))
+            sub=paste0(unique(events$sample)," profile is ",round(percentage_diff,2)," % different to ",s," profile"))
         #legend
         legend(x = "topright", legend = c(paste0(unique(events$sample)," profile"),paste0("Different events in ",s)),
             fill = c("red", "royalblue"), cex=0.5, xpd=TRUE, inset=c(-0.05,-0.1)) #inset = c(-0.4, -0.2)

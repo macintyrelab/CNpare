@@ -8,6 +8,7 @@
 #' @name unifySegments
 #' @importFrom data.table as.data.table setkey foverlaps
 #' @importFrom stats median
+#' @importFrom dplyr left_join
 #'
 #' @param posSeg dataframe with segments of the reference sample
 #' @param data dataframe with segments of the experimental model
@@ -19,22 +20,30 @@
 #'     data=cells_segcn[cells_segcn$sample=="OV-90",])
 
 unifySegments<-function(posSeg,data){
+    start<-rbind(posSeg[,c(1,2)],data[,c(1,2)])
+    ends<-rbind(posSeg[,c(1,3)],data[,c(1,3)])
+    start<-unique(start[order(start[,1],start[,2]),])
+    ends<-unique(ends[order(ends[,1],ends[,2]),])
+
+    #create segment ends vector
+    end<-c()
+    for(i in unique(start[,1]))
+    {
+        end<-c(end,start[start[,1]==i,2][-1]-1)
+        end<-c(end,max(ends[ends[,1]==i,2]))
+    }
+    new_seg<-cbind(start,end)
+
+
     pos<-data.table::as.data.table(posSeg[,c(5,4,1:3)])
     data<-data.table::as.data.table(data[,c(5,4,1:3)])
-    data.table::setkey(pos, chromosome, start, end)
-    overlap <- data.table::foverlaps(data,pos)
-    cn_new<-c()
-    for(i in seq_len(nrow(posSeg)))
-    {
-        chr<-posSeg[i,1]
-        start<-posSeg[i,2]
-        end<-posSeg[i,3]
-        curr_cn<-overlap$i.segVal
-        ind<-which(overlap$chromosome==chr & overlap$start==start & overlap$end==end)
-        cn_new<-c(cn_new,median(curr_cn[c(ind[1]:ind[length(ind)])],na.rm=TRUE))
-    }
-    cn_out<-cbind(posSeg,cn_new)
-    cn_out<-data.frame(cn_out,stringsAsFactors = FALSE)
+    new_seg<-data.table::as.data.table(new_seg)
+    data.table::setkey(new_seg, chromosome, start, end)
+    overlap1 <- data.table::foverlaps(pos,new_seg)[,c(1:5)]
+    overlap2 <- data.table::foverlaps(data,new_seg)[,c(1:5)]
+    overlap <- dplyr::left_join(overlap1,overlap2,by=c("chromosome", "start", "end"))
+
+    cn_out<-data.frame(overlap[,c(1:3,5:7)],stringsAsFactors = FALSE)
     colnames(cn_out)<-c("chromosome","start","end","segVal","sample","segVal_B")
 
     #return

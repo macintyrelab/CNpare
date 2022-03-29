@@ -93,7 +93,7 @@ For this example, we compare the copy-number profile of **OVKATE** (our sample o
 exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVKATE"])
 colnames(exp_cell)<-"OVKATE"
 
-measures<-getSimilarities(dat1=exp_cell, dat2=ccle_cn, method="all")
+measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn,method="all")
 ```
 
 Then, we can print the cell line with the most similar copy-number profile (lowest manhattan distance). We used the manhattan distance because it is usually preferred over the more common Euclidean distance when there is high dimensionality in the data. 
@@ -121,9 +121,9 @@ plot_simdensity(measures, method="pearson")
 
 ##### [Visualization of genome differences between two copy-number profiles]{.ul}
 
-CNpare also provides a visual representation of the genome differences. To this functionality, we changed the the default argument ``plot_dif` to TRUE. Here, we plotted differences in PANC0203 respect to OVKATE:
+CNpare also provides a visual representation of the genome differences. To this functionality, we changed the the default argument `plot_dif` to TRUE. Here, we plotted differences in PANC0203 respect to OVKATE:
 ```{r plot_differences1, fig3, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
-CNPlot_events(exp_cell,mod1_cell, method_diff = "non-normalized", plot_diff = TRUE)
+CNPlot_events(exp_cell,mod1_cell,method_diff="non-normalized",plot_diff=TRUE)
 ```
 
 #### 3) Get the cell line models of the same tissue origin representing the CIN type of interest
@@ -141,7 +141,7 @@ tissue.profiles<-getProfiles(segcn=tissue_segcn, samples=unique(tissue_segcn$sam
 
 ##### [Quantification of copy-number signatures]{.ul}
 
-Now, we generate a matrix with the activity levels of each copy-number signature per sample. 
+Now, we generate a matrix with the activity levels of each copy-number signature per sample. The file `component_parameters.rds` needs to be downloaded from here: https://bitbucket.org/britroc/cnsignatures/src/master/data/
 ```{r quantify_signs, message=FALSE}
 component_parameters<-readRDS(paste0(path_to_data,"component_parameters.rds"))
 

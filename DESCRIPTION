@@ -51,9 +51,9 @@ Imports:
     methods,
     akmeans,
     ggpubr,
-    tibble
+    tibble,
+    dplyr
 Suggests:
     knitr,
-    rmarkdown,
-    dplyr
+    rmarkdown
 VignetteBuilder: knitr

@@ -37,7 +37,7 @@ ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_seg
 exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVKATE"])
 colnames(exp_cell)<-"OVKATE"
 
-measures<-getSimilarities(dat1=exp_cell, dat2=ccle_cn, method="all")
+measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn,method="all")
 
 ## ----mclosest_cn, echo=FALSE--------------------------------------------------
 measures<-measures[order(measures$manhattan),]
@@ -56,7 +56,7 @@ head(measures,5)
 plot_simdensity(measures, method="pearson")
 
 ## ----plot_differences1, fig3, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE----
-CNPlot_events(exp_cell,mod1_cell, method_diff = "non-normalized", plot_diff = TRUE)
+CNPlot_events(exp_cell,mod1_cell,method_diff="non-normalized",plot_diff=TRUE)
 
 ## ----tissue_origin------------------------------------------------------------
 sample="OVKATE"
