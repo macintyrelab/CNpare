@@ -7,7 +7,7 @@ author:
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Workflow}
+  %\VignetteIndexEntry{Indentifying the most representative CIN model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -92,7 +92,6 @@ For this example, we compare the copy-number profile of **OVKATE** (our sample o
 ```{r comparisons, warning=FALSE}
 exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVKATE"])
 colnames(exp_cell)<-"OVKATE"
-
 measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn,method="all")
 ```
 

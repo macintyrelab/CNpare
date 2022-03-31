@@ -12,16 +12,16 @@ library(CNpare)
 path_to_data<-"C:/Users/bhernando/Desktop/CNIO/Projects/BlasProject/quality_tool/data/"
 
 ## ----input, include=FALSE-----------------------------------------------------
-cells_segcn<-cells_segcn
-cells_mapping<-cells_mapping
-CCLE_metadata<-CCLE_metadata
+cells_segcn<-CNpare::cells_segcn
+cells_mapping<-CNpare::cells_mapping
+CCLE_metadata<-CNpare::CCLE_metadata
 CCLE_metadata$Cell.line.primary.name<-toupper(CCLE_metadata$Cell.line.primary.name)
 
 ## ----pos_bins-----------------------------------------------------------------
 allchr=c(1:22) #Add 23 if want to include chrX
 lengthChr<-lengthChr
 posBins <- lapply(allchr,function(chr) 
-    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+    getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 
 ## ----cnbins-------------------------------------------------------------------
 ccle<-as.data.frame(cbind(cellid=cells_mapping$cellid[cells_mapping$study=="CCLE"],sample=cells_mapping$fileid[cells_mapping$study=="CCLE"]))
@@ -36,7 +36,6 @@ ccle_cn <- getCNbins(posBins=posBins, data=cells_segcn, samples=unique(cells_seg
 ## ----comparisons, warning=FALSE-----------------------------------------------
 exp_cell=as.matrix(ccle_cn[,colnames(ccle_cn)=="OVKATE"])
 colnames(exp_cell)<-"OVKATE"
-
 measures<-getSimilarities(dat1=exp_cell,dat2=ccle_cn,method="all")
 
 ## ----mclosest_cn, echo=FALSE--------------------------------------------------
