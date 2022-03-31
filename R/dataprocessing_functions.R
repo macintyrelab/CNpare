@@ -53,6 +53,7 @@ getCINProfiles <- function(segcn,samples){
 #' @title Get copy-number per bins
 #' @description This function transform segment tables to bin tables
 #' @name getCNbins
+#' @importFrom data.table as.data.table setkey foverlaps
 #'
 #' @param posBins list with genomic positions of bins. Each list contains
 #' data from each chromosome. Obtained from getBinsStartsEnds

@@ -135,6 +135,7 @@ pair_cosine<-function(cell, ccle, ccle.name, pvalue){
 #' @title Get similarity metrics
 #' @description This function get similarity metrics for comparisons
 #' @name getSimilarities
+#' @importFrom stats median cor
 #'
 #' @param dat1 matrix with bin-level copy numbers per sample to test
 #' @param dat2 matrix with bin-level copy numbers per model to compare
@@ -268,6 +269,7 @@ getSimilarities.sample<-function(s, dat1, dat2, method, pvalue){
 #' @param samples vector with name of samples
 #' @param measure dataframe with similarity metrics
 #' @param method similarity metric to use for ordering. Default is all
+#'
 #' @return dataframe with similarity metrics for all comparisons
 #' @export
 #' @examples
@@ -379,6 +381,7 @@ getInputmatrix<-function(dat){
 #' @param matrix matrix with variables in rows and samples in columns
 #' @param cell one-column matrix with data of input sample, with one row per variable
 #' @param include a logical value to indicate if input sample should be used for clustering or not
+#'
 #' @return vector with list of samples in the closest cluster of the input sample
 #' @export
 #' @examples

@@ -22,7 +22,9 @@ A plot with copy-number profiles of two samples. The \% genome difference
 between profiles is also reported.
 }
 \description{
-This function draws two copy-number profiles for visual comparison
+This function draws two copy-number profiles for visual comparison.
+Before to apply this function, please double-check that both profiles include
+the same chromosomes
 }
 \examples{
 exp_cell=cells_segcn[cells_segcn$sample=="22RV1",]

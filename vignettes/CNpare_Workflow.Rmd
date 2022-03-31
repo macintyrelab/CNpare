@@ -47,9 +47,9 @@ We first get the **RData** files in the `data/` folder:
 -   `CCLE_metadata.RData` -- Metadata of CCLE database for selecting cell lines by tissue origin
 
 ```{r input, include=FALSE}
-cells_segcn<-cells_segcn
-cells_mapping<-cells_mapping
-CCLE_metadata<-CCLE_metadata
+cells_segcn<-CNpare::cells_segcn
+cells_mapping<-CNpare::cells_mapping
+CCLE_metadata<-CNpare::CCLE_metadata
 CCLE_metadata$Cell.line.primary.name<-toupper(CCLE_metadata$Cell.line.primary.name)
 ```
 
@@ -57,12 +57,12 @@ CCLE_metadata$Cell.line.primary.name<-toupper(CCLE_metadata$Cell.line.primary.na
 
 ##### [Cell lines data preprocessing]{.ul}
 
-Segmented copy-number profiles of cell lines may be fitted to the genomic positions of bins. Therefore, we split genome in evenly sized bins (default 500 kb) and get their positions. 
+Segmented copy-number profiles of cell lines may be fitted to the genomic positions of bins. Therefore, we split genome in evenly sized bins (here we used 1Mb) and get their positions. 
 ```{r pos_bins}
 allchr=c(1:22) #Add 23 if want to include chrX
 lengthChr<-lengthChr
 posBins <- lapply(allchr,function(chr) 
-    getBinsStartsEnds(window=500000, chr, lengthChr[chr]))
+    getBinsStartsEnds(window=1000000, chr, lengthChr[chr]))
 ```
 
 We selected the CCLE models with available copy-number profile. We also selected profiles with detectable CIN (those with at least 20 CNAs in a profile). Therefore, we discarded profiles with non detectable chromosomal instability. Finally, a matrix with copy-numbers per bin is then generated.
@@ -103,6 +103,7 @@ The user can also choose to compute the empirical p-value of each comparison by 
 measures<-measures[order(measures$manhattan),]
 head(measures,5)
 ```
+
 ```{r plot_top1, fig1, fig.height = 4, fig.width = 8, fig.align = "center", eval=TRUE, echo=FALSE}
 exp_cell=cells_segcn[cells_segcn$sample=="OVKATE",]
 mod1_cell=cells_segcn[cells_segcn$sample=="Panc 02.03",]

@@ -4,18 +4,22 @@
 \alias{unifySegments}
 \title{Alignment of genomic positions of segments}
 \usage{
-unifySegments(posSeg, data)
+unifySegments(posSeg, data, window = 1e+05)
 }
 \arguments{
 \item{posSeg}{dataframe with segments of the reference sample}
 
 \item{data}{dataframe with segments of the experimental model}
+
+\item{window}{boundary margin for smoothing segments. Default is 100000}
 }
 \value{
 dataframe with segments of the model aligned to those in reference
 }
 \description{
-This function unifies boundaries of copy-number segments
+This function unifies boundaries of copy-number segments.
+Before to apply this function, please double-check that both profiles include
+the same chromosomes
 }
 \examples{
 unify<-unifySegments(posSeg=cells_segcn[cells_segcn$sample=="OVKATE",],

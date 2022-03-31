@@ -91,7 +91,9 @@ plot_simdensity<-function(measures,method){
 }
 
 #' @title Visualization of two copy-number profiles
-#' @description This function draws two copy-number profiles for visual comparison
+#' @description This function draws two copy-number profiles for visual comparison.
+#' Before to apply this function, please double-check that both profiles include
+#' the same chromosomes
 #' @name CNPlot_events
 #' @importFrom graphics abline axis hist legend par plot.new plot.window segments text title
 #'
@@ -101,6 +103,7 @@ plot_simdensity<-function(measures,method){
 #' "non-normalized" by ploidy status
 #' @param plot_diff logical indicating if only segments that are different in
 #' the second profile may be plotted. Default is FALSE
+#'
 #' @return A plot with copy-number profiles of two samples. The % genome difference
 #' between profiles is also reported.
 #' @export
@@ -132,7 +135,7 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
             cex.lab=1.1,cex.main=1.5,font.lab=2,outer=FALSE,
-            sub=paste0(events$sample," profile is ",round(percentage_diff,2)," % different to ",events_2$sample," profile"))
+            sub=paste0(unique(events$sample)," profile is ",round(percentage_diff,2)," % different to ",unique(events_2$sample)," profile"))
     } else {
         #get unified profiles
         unify<-unifySegments(events, events_2)
@@ -157,9 +160,9 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
         #title
         title(main="Copy Number Profile",xlab="Chromosome",ylab="Copy Number",
             cex.lab=1.1,cex.main=1.5, font.lab=2, outer=FALSE,
-            sub=paste0(unique(events$sample)," profile is ",round(percentage_diff,2)," % different to ",s," profile"))
+            sub=paste0(s," profile is ",round(percentage_diff,2)," % different to ",unique(events$sample)," profile"))
         #legend
-        legend(x = "topright", legend = c(paste0(unique(events$sample)," profile"),paste0("Different events in ",s)),
+        legend(x = "topright", legend = c(paste0(s," profile"),paste0("Different events in ",unique(events$sample))),
             fill = c("red", "royalblue"), cex=0.5, xpd=TRUE, inset=c(-0.05,-0.1)) #inset = c(-0.4, -0.2)
     }
 
@@ -174,13 +177,13 @@ CNPlot_events <- function(events, events_2, method_diff, plot_diff=FALSE){
     # Plot the first data set
     for (i in seq_len(nrow(events))){
         e <- events[i,]
-        segments(e$start,e$segVal,e$end,e$segVal,lwd=5.,col="red")
+        segments(e$start,e$segVal,e$end,e$segVal,lwd=3.,col="red")
     }
 
     # Plot the second data set
     for (i in seq_len(nrow(events_2))){
         e <- events_2[i,]
-        segments(e$start,e$segVal,e$end,e$segVal,lwd=5.,col="royalblue")
+        segments(e$start,e$segVal,e$end,e$segVal,lwd=3.,col="royalblue")
     }
 }
 
