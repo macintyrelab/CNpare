@@ -23,8 +23,9 @@ library(dplyr)
 library(CNpare)
 
 ## DATA DIRECTORY
-# The file `component_parameters.rds` needs to be downloaded from repo (https://bitbucket.org/britroc/cnsignatures/src/master/data/) and then added to the `data/` folder for being able to run the vignette (this file has not been added to this repo due to size limitations)
-path_to_data<-paste0(dirname(rstudioapi::getSourceEditorContext()$path),"/data/")
+# The file `component_parameters.rds` needs to be downloaded from repo (https://bitbucket.org/britroc/cnsignatures/src/master/data/). 
+# This file has not been added to this repo due to size limitations)
+path_to_data<-"C:/Users/bhernando/Desktop/CNIO/Projects/CNpare_analyses/data/"
 ```
 
 ### Finding the best model of chromosomal instability

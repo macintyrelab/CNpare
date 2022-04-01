@@ -8,8 +8,10 @@ knitr::opts_chunk$set(warning = FALSE)
 library(dplyr)
 library(CNpare)
 
-# DATA DIRECTORY
-path_to_data<-"C:/Users/bhernando/Desktop/CNIO/Projects/BlasProject/quality_tool/data/"
+## DATA DIRECTORY
+# The file `component_parameters.rds` needs to be downloaded from repo (https://bitbucket.org/britroc/cnsignatures/src/master/data/). 
+# This file has not been added to this repo due to size limitations)
+path_to_data<-"C:/Users/bhernando/Desktop/CNIO/Projects/CNpare_analyses/data/"
 
 ## ----input, include=FALSE-----------------------------------------------------
 cells_segcn<-CNpare::cells_segcn
